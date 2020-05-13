@@ -9,3 +9,5 @@ https://qiita.com/watawuwu/items/b20abfae62f76e4b4c0c
 # 未
 * serdeの機能で様々な形態のJSONを列挙型として扱う
 https://igaguri.hatenablog.com/entry/2018/12/28/120500
+* Rustのstruct、traitの使い方
+https://qiita.com/yasuyuky/items/8894f731da9a4e8cac4c
