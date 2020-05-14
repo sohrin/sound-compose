@@ -14,8 +14,14 @@ https://qiita.com/skitaoka/items/753a519d720a1ccebb0d
 * Rust Cargo でプロジェクト管理、リリースビルドの方法
 https://webbibouroku.com/Blog/Article/rust-cargo#outline__4_1
 
+* RustでデータをJSONやYAML等にserialize/deserializeする方法
+https://qiita.com/fujitayy/items/ed0033f8bb036d23710c
+
 * serdeの機能で様々な形態のJSONを列挙型として扱う
 https://igaguri.hatenablog.com/entry/2018/12/28/120500
+
+* RustのSerdeの簡単な紹介
+https://qiita.com/garkimasera/items/0442ee896403c6b78fb2
 
 * Rustのstruct、traitの使い方
 https://qiita.com/yasuyuky/items/8894f731da9a4e8cac4c
@@ -41,9 +47,22 @@ https://doc.rust-jp.rs/book/second-edition/ch06-03-if-let.html
 * Rustのパターンマッチを完全に理解した
 https://frozenlib.net/blog/2018-03-11_rust-pattern-match/
 
+* アンダースコア(Rustの基本構文-3-)
+https://qiita.com/jin237/items/59ef229a4de30cb8203b
+
+* What does the error `cannot be named the same as a tuple variant` mean?
+https://stackoverflow.com/questions/46065487/what-does-the-error-cannot-be-named-the-same-as-a-tuple-variant-mean
+
 
 # なう
-* 「Rust ファイル操作」、「Rust ファイル 存在」でググる
+* 【Rust】がばがばRust独学 - 9. Error Handling
+https://charaken.hatenablog.com/entry/2020/01/06/070000
+
+* RustのOptionとResult
+https://qiita.com/take4s5i/items/c890fa66db3f71f41ce7
+
+* The Rust Programming Language 要約 3-8章
+http://www.swlab.cs.okayama-u.ac.jp/~nom/lect/rust/The-Rust-Programming-Language-Summary-Chap3-8.html
 
 * rustで作るcli tool
 https://qiita.com/syui/items/e071ba72ea82d583e380
@@ -52,6 +71,9 @@ https://qiita.com/syui/items/e071ba72ea82d583e380
 * Command Line Toolを作ってみる in Rust
 https://qiita.com/watawuwu/items/b20abfae62f76e4b4c0c
 ※テスト、エラーハンドリング（unwrap？failure？thiserror？anyhow？）、パイプ処理（いったん使えないようにして考慮しなくてよくする？）、CI、ランチャー、「次にどんなことをすれば」が未。CIは後日？Travis CIの利点は？
+
+*Rust1.0学習用私的メモ
+https://qiita.com/yohhoy/items/e78dcc4d168f247d83ce
 
 * リファクタリングしてモジュール性とエラー処理を向上させる
 https://doc.rust-jp.rs/book/second-edition/ch12-03-improving-error-handling-and-modularity.html
@@ -70,6 +92,9 @@ https://keens.github.io/blog/2017/01/15/rustnomoju_runokirikata/
 * 実践的なアプリケーションを書いてみよう！ Rustの構造化プログラミング【第二言語としてのRust】
 https://employment.en-japan.com/engineerhub/entry/2017/07/19/110000
 ※Option型、Result型、トレイトがまだ分かっていない。
+
+
+
 
 
 # 済
