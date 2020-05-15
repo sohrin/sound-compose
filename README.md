@@ -55,6 +55,48 @@ https://stackoverflow.com/questions/46065487/what-does-the-error-cannot-be-named
 
 
 # なう
+* エラー処理（公式ドキュメント）
+https://doc.rust-jp.rs/book/second-edition/ch09-00-error-handling.html
+
+* Rustのエラーとなかよくなる
+https://3c1u.hatenablog.com/entry/2019/09/18/060000
+※じぶんでエラー型を定義する→済
+※Fromトレイトを実装する→未
+
+* rustのエラー処理と疑問符演算子
+https://cat-in-136.github.io/2018/04/rust-error-handling-question.html
+
+* Rustのエラーハンドリング
+https://medium.com/@11Takanori/rust%E3%81%AE%E3%82%A8%E3%83%A9%E3%83%BC%E3%83%8F%E3%83%B3%E3%83%89%E3%83%AA%E3%83%B3%E3%82%B0-6660cd4d16c0
+
+* Rustの便利クレート
+https://qiita.com/qryxip/items/7c16ab9ef3072c1d7199
+※thiserror、anyhowについて
+※maplit、getset、im、typenum、remove_dir_all、which、pretty_assertions、difference、tempdir
+
+* Result について
+http://osamu0329.hatenablog.jp/entry/2015/05/10/021234
+※unwrap()
+
+* エラーハンドリング（公式ドキュメント）
+https://doc.rust-jp.rs/the-rust-programming-language-ja/1.6/book/error-handling.html#result-%E5%9E%8B
+
+* タプル構造体
+https://doc.rust-jp.rs/the-rust-programming-language-ja/1.6/book/structs.html#%E3%82%BF%E3%83%97%E3%83%AB%E6%A7%8B%E9%80%A0%E4%BD%93
+
+* Rustのイディオム
+https://qiita.com/MoriokaReimen/items/b32ebcb0ab23bffd7e9b
+
+* Rustのstruct、traitの使い方
+https://qiita.com/yasuyuky/items/8894f731da9a4e8cac4c
+
+* RustでOption値やResult値を上手に扱う
+https://qiita.com/tatsuya6502/items/cd41599291e2e5f38a4a
+
+* Rustのエラー処理
+https://qiita.com/fujitayy/items/cafe661415b6aa33d884
+※?オペレーター
+
 * 【Rust】がばがばRust独学 - 9. Error Handling
 https://charaken.hatenablog.com/entry/2020/01/06/070000
 
@@ -77,10 +119,6 @@ https://qiita.com/yohhoy/items/e78dcc4d168f247d83ce
 
 * リファクタリングしてモジュール性とエラー処理を向上させる
 https://doc.rust-jp.rs/book/second-edition/ch12-03-improving-error-handling-and-modularity.html
-
-* Rustの便利クレート
-https://qiita.com/qryxip/items/7c16ab9ef3072c1d7199
-※maplit、getset、im、typenum、remove_dir_all、which、pretty_assertions、difference、tempdir、
 
 * Rustライブラリとバイナリの両方を含むパッケージ？
 https://www.it-swarm.dev/ja/rust/rust%E3%83%A9%E3%82%A4%E3%83%96%E3%83%A9%E3%83%AA%E3%81%A8%E3%83%90%E3%82%A4%E3%83%8A%E3%83%AA%E3%81%AE%E4%B8%A1%E6%96%B9%E3%82%92%E5%90%AB%E3%82%80%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8%EF%BC%9F/1050664534/

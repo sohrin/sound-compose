@@ -6,6 +6,11 @@ use std::env;
 use std::fs::File;
 use structopt::{clap, StructOpt};
 
+use super::super::super::super::super::common::AppError;
+// TODO: なぜ↑だとコンパイルが通り、↓だとエラーになる？
+//       main.rsからはuse sound_compose_lib::internal::apps::cli::common::args;で参照できている。lib.rsからは？
+// use common::AppError;
+
 /*
  * MEMO: StructOpt(引数処理ライブラリ)
  *       https://docs.rs/crate/structopt/0.3.14
@@ -137,6 +142,8 @@ pub fn args_proc() {
     }
 
     // 引数チェック処理
+    // TODO: エラーだった場合の処理
+    // TODO: ?で委譲できる？
     check_opt(&mut opt);
 
     // TODO: ログレベルをデバッグにしているのにログが出力されない件
@@ -162,7 +169,10 @@ pub fn args_proc() {
  *       https://teratail.com/questions/114569
  */
 /// 設定ファイル存在チェック
-fn check_opt(opt: &mut Opt) {
+fn check_opt(opt: &mut Opt) -> Result<File, AppError::YamlFileNotFoundError> {
+    // TODO: チェック処理なのでResultのTがいらない場合は()でいいのか
+    //       https://doc.rust-lang.org/std/result/#results-must-be-used
+    //       https://internals.rust-lang.org/t/implicit-void-result-ok/9863
     /*
      * MEMO: Option(列挙型)
      *       JavaのOptional型に近い。
@@ -174,15 +184,53 @@ fn check_opt(opt: &mut Opt) {
      *       https://nacika.com/entry/2017/11/12/071722/
      *       https://qiita.com/koher/items/e4835bd429b88809ab33
      */
+    
+    // TODO: エラーハンドリングについて
+    //       https://qiita.com/qryxip/items/7c16ab9ef3072c1d7199#thiserror
+    //       https://3c1u.hatenablog.com/entry/2019/09/18/060000
     if opt.file.is_none() {
-        if File::open("sound-compose.yaml").is_ok() {
+        // if File::open("sound-compose.yaml").is_ok() {
+        //     opt.file = Some(String::from("sound-compose.yaml"));
+        // } else if File::open("sound-compose.yml").is_ok() {
+        //     opt.file = Some(String::from("sound-compose.yml"));
+        // } else {
+        //     // TODO: エラーにしなければならない
+        //     // TODO: テスト追加
+
+        //     opt.file = Some(String::from("sound-compose_none.yml"));
+        // }
+        // TODO: ifで判定するパターン
+        let file_open_result = File::open("sound-compose.yaml");
+        if file_open_result.is_ok() {
             opt.file = Some(String::from("sound-compose.yaml"));
-        } else if File::open("sound-compose.yml").is_ok() {
-            opt.file = Some(String::from("sound-compose.yml"));
+            return Ok(file_open_result.unwrap());
         } else {
-            // TODO: エラーにしなければならない
-            // TODO: テスト追加
-            opt.file = Some(String::from("sound-compose_none.yml"));
+            // matchで判定するパターン
+            match File::open("sound-compose.yml") {
+                Ok(file_obj) => {
+                    opt.file = Some(String::from("sound-compose.yml"));
+                    return Ok(file_obj);
+                },
+                Err(err) => {
+                    // TODO: 呼び出し元のエラー対応時に消すこと
+                    opt.file = Some(String::from("sound-compose_none.yml"));
+
+                    // TODO:returnは必要？
+                    return Err(AppError::YamlFileNotFoundError(err));
+                },
+            }   
         }
+    } else {
+        // TODO: elseがないとエラーになる件
+        // TODO: clone()しないとコンパイルエラーになる件、"cloneだらけ"で検索
+        match File::open(opt.file.clone().unwrap()) {
+            Ok(file_obj) => {
+                return Ok(file_obj);
+            },
+            Err(err) => {
+                return Err(AppError::YamlFileNotFoundError(err));
+            },
+        }   
     }
+
 }

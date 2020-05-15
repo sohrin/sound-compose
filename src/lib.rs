@@ -13,3 +13,4 @@ extern crate log;
  */
 // TODO: pub useについて・・・https://qiita.com/dalance/items/917ef0d587d884ecc69f
 pub mod internal;
+pub mod common;
