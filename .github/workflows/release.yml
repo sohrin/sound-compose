@@ -10,10 +10,40 @@ on:
 jobs:
   build_and_release:
     name: build and release sound-compose.
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target:
+#          - x86_64-unknown-linux-gnu
+          - x86_64-pc-windows-gnu
+#          - x86_64-apple-darwin
+        include:
+#          - target: x86_64-unknown-linux-gnu
+#            os: ubuntu-latest
+          - target: x86_64-pc-windows-gnu
+            os: ubuntu-latest
+#          - target: x86_64-apple-darwin
+#            os: macos-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout source
         uses: actions/checkout@v2
+
+      - name: Cache cargo registry
+        uses: actions/cache@v1
+        with:
+          path: ~/.cargo/registry
+          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+      - name: Cache cargo index
+        uses: actions/cache@v1
+        with:
+          path: ~/.cargo/git
+          key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
+      - name: Cache cargo build
+        uses: actions/cache@v1
+        with:
+          path: target
+          key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+
       - name: Install Rust Toolchain
         uses: actions-rs/toolchain@v1
         with:
@@ -23,10 +53,10 @@ jobs:
         with:
           command: build
           args: --release --all-features
+
       - name: Zip output
         run: |
-          cd target/release
-          zip release sound-compose.exe
+          zip --junk-paths sound-compose-${{ matrix.target }} target/${{ matrix.target }}/release/sound-compose{,.exe}
       - name: Create release
         id: create_release
         uses: actions/create-release@v1.0.0
@@ -44,7 +74,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/release/release.zip
+          asset_path: ./target/${{ matrix.target }}/release/sound-compose-${{ matrix.target }}.zip
           # TODO: バージョン名
-          asset_name: sound-compose.zip
+          asset_name: sound-compose-${{ matrix.target }}.zip
           asset_content_type: application/zip

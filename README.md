@@ -152,3 +152,10 @@ https://qiita.com/bottomzlife/items/bf36b4d057bd22e54a46
 
 * シンプルで応用の効くmakefileとその解説
 http://urin.github.io/posts/2013/simple-makefile-for-clang
+
+# 済（Github Action）
+* GitHub ActionsでReleaseを自動化する方法としたときに得た学び
+http://skawashima.com/blog/2019/12/github-actions-auto-release/
+
+* Rust cargo Action
+https://github.com/actions-rs/cargo
