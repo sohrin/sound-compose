@@ -55,6 +55,10 @@ https://stackoverflow.com/questions/46065487/what-does-the-error-cannot-be-named
 
 
 # なう
+* Command Line Toolを作ってみる in Rust
+https://qiita.com/watawuwu/items/b20abfae62f76e4b4c0c
+※テスト、エラーハンドリング（unwrap？failure？thiserror？anyhow？）、パイプ処理（いったん使えないようにして考慮しなくてよくする？）、CI、ランチャー、「次にどんなことをすれば」が未。CIは後日？Travis CIの利点は？
+
 * エラー処理（公式ドキュメント）
 https://doc.rust-jp.rs/book/second-edition/ch09-00-error-handling.html
 
@@ -106,14 +110,6 @@ https://qiita.com/take4s5i/items/c890fa66db3f71f41ce7
 * The Rust Programming Language 要約 3-8章
 http://www.swlab.cs.okayama-u.ac.jp/~nom/lect/rust/The-Rust-Programming-Language-Summary-Chap3-8.html
 
-* rustで作るcli tool
-https://qiita.com/syui/items/e071ba72ea82d583e380
-※test、makefile、CIが未。CIは後日？Travis CIの利点は？
-
-* Command Line Toolを作ってみる in Rust
-https://qiita.com/watawuwu/items/b20abfae62f76e4b4c0c
-※テスト、エラーハンドリング（unwrap？failure？thiserror？anyhow？）、パイプ処理（いったん使えないようにして考慮しなくてよくする？）、CI、ランチャー、「次にどんなことをすれば」が未。CIは後日？Travis CIの利点は？
-
 *Rust1.0学習用私的メモ
 https://qiita.com/yohhoy/items/e78dcc4d168f247d83ce
 
@@ -138,6 +134,10 @@ https://employment.en-japan.com/engineerhub/entry/2017/07/19/110000
 # 済
 * Goにはディレクトリ構成のスタンダードがあるらしい。
 https://qiita.com/sueken/items/87093e5941bfbc09bea8
+
+* rustで作るcli tool
+https://qiita.com/syui/items/e071ba72ea82d583e380
+※test、makefile、CIが未。CIは後日？Travis CIの利点は？
 
 # 済（Makefile）
 * rustで作るcli tool
