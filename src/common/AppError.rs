@@ -1,5 +1,7 @@
 use std::fmt;
 
+use std::fmt::Display;
+
 // TODO: タプル構造体について（引数に見えるがタプルのフィールド定義なので、pubがないとコンストラクタがprivateと扱われる。）
 pub struct YamlFileNotFoundError(pub std::io::Error);
 
@@ -11,6 +13,7 @@ pub struct YamlFileNotFoundError(pub std::io::Error);
 #[derive(Debug)]
 pub enum AppError {
     YamlFileNotFoundError(std::io::Error),
+    YamlDeserializeError(serde_yaml::Error),
 }
 
 // TODO: https://qiita.com/qryxip/items/7c16ab9ef3072c1d7199#thiserror
@@ -20,6 +23,7 @@ impl fmt::Display for AppError {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         match self {
             Self::YamlFileNotFoundError(err) => write!(fmt, "{}", err),
+            Self::YamlDeserializeError(err) => write!(fmt, "{}", err),
         }
     }
 }
@@ -29,6 +33,35 @@ impl std::error::Error for AppError {
     fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
         match self {
             Self::YamlFileNotFoundError(err) => err.source(),
+            Self::YamlDeserializeError(err) => err.source(),
         }
+    }
+}
+
+
+// TODO: 後で改善したほうが良い
+// https://doc.rust-lang.org/std/io/struct.Error.html
+#[derive(Debug)]
+pub struct MyError {
+    v: String,
+}
+
+impl MyError {
+    pub fn new() -> MyError {
+        MyError {
+            v: "oh no!".to_string()
+        }
+    }
+
+    fn change_message(&mut self, new_message: &str) {
+        self.v = new_message.to_string();
+    }
+}
+
+impl std::error::Error for MyError {}
+
+impl Display for MyError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "MyError: {}", &self.v)
     }
 }

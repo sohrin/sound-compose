@@ -138,3 +138,17 @@ https://employment.en-japan.com/engineerhub/entry/2017/07/19/110000
 # 済
 * Goにはディレクトリ構成のスタンダードがあるらしい。
 https://qiita.com/sueken/items/87093e5941bfbc09bea8
+
+# 済（Makefile）
+* rustで作るcli tool
+https://qiita.com/syui/items/e071ba72ea82d583e380
+※面倒なコマンドは、makefile化することもできます。
+
+* Windowsでmakeコマンドを使う
+https://qiita.com/tokikaze0604/items/e13c04192762f8d4ec85
+
+* WindowsでもUNIXでも動くMakefileのポイント
+https://qiita.com/bottomzlife/items/bf36b4d057bd22e54a46
+
+* シンプルで応用の効くmakefileとその解説
+http://urin.github.io/posts/2013/simple-makefile-for-clang

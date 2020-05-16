@@ -6,10 +6,13 @@ use std::env;
 use std::fs::File;
 use structopt::{clap, StructOpt};
 
-use super::super::super::super::super::common::AppError;
+use crate::common::AppError;
+use crate::internal::apps::cli::common::yaml;
 // TODO: なぜ↑だとコンパイルが通り、↓だとエラーになる？
 //       main.rsからはuse sound_compose_lib::internal::apps::cli::common::args;で参照できている。lib.rsからは？
 // use common::AppError;
+
+use crate::common::AppError::MyError;
 
 /*
  * MEMO: StructOpt(引数処理ライブラリ)
@@ -144,6 +147,7 @@ pub fn args_proc() {
     // 引数チェック処理
     // TODO: エラーだった場合の処理
     // TODO: ?で委譲できる？
+    // TODO: ここで?が使えないのは何故？→ResultかOptionを返却する関数内でしか使えない
     check_opt(&mut opt);
 
     // TODO: ログレベルをデバッグにしているのにログが出力されない件
@@ -151,6 +155,13 @@ pub fn args_proc() {
     println!("引数チェック後 {:?}", opt);
 
     // yamlファイルを読み込む
+    let yaml_file = yaml::read_file(opt.file.clone().unwrap());
+
+    let yaml_data = yaml::deserialize_file(yaml_file.unwrap());
+
+    // TODO: 実装中なので後で消す
+    println!("{:?}", yaml_data);
+
 }
 
 /*
@@ -169,7 +180,7 @@ pub fn args_proc() {
  *       https://teratail.com/questions/114569
  */
 /// 設定ファイル存在チェック
-fn check_opt(opt: &mut Opt) -> Result<File, AppError::YamlFileNotFoundError> {
+fn check_opt(opt: &mut Opt) -> std::result::Result<File, AppError::YamlFileNotFoundError> {
     // TODO: チェック処理なのでResultのTがいらない場合は()でいいのか
     //       https://doc.rust-lang.org/std/result/#results-must-be-used
     //       https://internals.rust-lang.org/t/implicit-void-result-ok/9863
@@ -233,4 +244,68 @@ fn check_opt(opt: &mut Opt) -> Result<File, AppError::YamlFileNotFoundError> {
         }   
     }
 
+    // TODO: ソースが悪い気がする。
+//    panic!("ここまででreturnされないことが想定外");
+//    return Err(AppError::YamlFileNotFoundError(std::io::Error::new(ErrorKind::Other, MyError::new())));
+}
+
+// TODO: test用のuseはどうやって定義するの？
+#[cfg(test)]
+mod tests {
+    /*
+     * MEMO: テストモジュールのuse
+     *       「use super::*;」しておけば、テスト対象モジュールで使用しているモジュールがそのまま使える。
+     */
+    use super::*;
+
+    /*
+     * MEMO: 定数
+     *       
+     */
+    // lazy_static! {
+    //     pub static const FILE_PATH: String = String::from("sound-compose-test.yaml");
+    // }
+
+    #[test]
+    fn test_check_opt_is_some() {
+        /*
+         * MEMO: 自動テスト、テストのフェース
+         *       https://sites.google.com/site/programmerscheatcheatcheat/software-test/yunittotesuto/junit/junitwo-ben-ge-deni-shimeru-qianni
+         */
+
+        // Setup
+        /*
+         * MEMO: 定数
+         *       基本的にはletの代わりにconstを使用すればいい。Javaと同じく慣習的に大文字にする。
+         *       型を明示しないとコンパイルエラーとなることに注意。
+         *       https://doc.rust-jp.rs/rust-by-example-ja/custom_types/constants.html
+         */
+        // TODO: constで動かなかったので非定数としたが・・・定数にすればcloneもいらないはず
+        let FILE_PATH = String::from("sound-compose-test.yaml");
+        let file = std::fs::OpenOptions::new()
+            .create(true).write(true).open(FILE_PATH.clone())
+            .unwrap();
+
+        let mut buildOpts = BuildOpts {
+            no_cache: true,
+        };
+
+        let mut opt = crate::internal::apps::cli::common::args::Opt {
+            file: Some(FILE_PATH.clone()),
+            sub: Sub::Build(buildOpts),
+            verbose: true,
+        };
+
+        let expected = FILE_PATH.clone();
+
+        // Run
+        #[warn(unused_must_use)]
+        check_opt(&mut opt);
+
+        // Verify
+        assert_eq!(expected, opt.file.unwrap());
+
+        // Teardown
+        std::fs::remove_file(FILE_PATH);
+    }
 }
