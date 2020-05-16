@@ -1,5 +1,7 @@
 # 「git tag vX.Y.Z」→「git push origin --tags」をトリガーにビルド・リリースする。
 
+# TODO: runコマンド内容をMakefile化 テスト、カバレッジ取得（、定期ビルド）：https://qiita.com/dalance/items/66d97c252b8dd9c96c29
+
 name: release
 
 on:
@@ -15,13 +17,13 @@ jobs:
       matrix:
         target:
 #          - x86_64-unknown-linux-gnu
-          - x86_64-pc-windows-gnu
+          - x86_64-pc-windows-msvc
 #          - x86_64-apple-darwin
         include:
 #          - target: x86_64-unknown-linux-gnu
 #            os: ubuntu-latest
-          - target: x86_64-pc-windows-gnu
-            os: ubuntu-latest
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
 #          - target: x86_64-apple-darwin
 #            os: macos-latest
     runs-on: ${{ matrix.os }}
