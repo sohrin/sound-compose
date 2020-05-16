@@ -60,9 +60,10 @@ jobs:
           args: --release
 
       - name: Zip output
-        # TODO: クロスコンパイル（target/${{ matrix.target }}/release）、Linuxコマンド（exeいらなさそう）：zip --junk-paths sound-compose-${{ matrix.target }} target/release/sound-compose{,.exe}
+        # TODO: クロスコンパイル（target/${{ matrix.target }}/release）、Linuxコマンド（exeいらなさそう、WinとLinuxでifを使って実行コマンドを変える必要あり？）：zip --junk-paths sound-compose-${{ matrix.target }} target/release/sound-compose{,.exe}
         run: |
-          7z a sound-compose-${{ matrix.target }}.zip target\release\sound-compose.exe
+          move target\release\sound-compose.exe .
+          7z a sound-compose-${{ matrix.target }}.zip sound-compose.exe
       - name: Create release
         id: create_release
         uses: actions/create-release@v1.0.0
