@@ -10,6 +10,7 @@ on:
 jobs:
   build_and_release:
     name: build and release sound-compose.
+    # TODO: クロスコンパイル
     strategy:
       matrix:
         target:
@@ -52,11 +53,14 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --release --target=${{ matrix.target }}
+          # TODO: クロスコンパイル
+          #args: --release --target=${{ matrix.target }}
+          args: --release
 
       - name: Zip output
+        # TODO: クロスコンパイル（target/${{ matrix.target }}/release）
         run: |
-          zip --junk-paths sound-compose-${{ matrix.target }} target/${{ matrix.target }}/release/sound-compose{,.exe}
+          zip --junk-paths sound-compose-${{ matrix.target }} target/release/sound-compose{,.exe}
       - name: Create release
         id: create_release
         uses: actions/create-release@v1.0.0

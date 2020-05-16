@@ -159,3 +159,6 @@ http://skawashima.com/blog/2019/12/github-actions-auto-release/
 
 * Rust cargo Action
 https://github.com/actions-rs/cargo
+
+* GitHub ActionsでRustプロジェクトをクロスビルドしてリリースする
+https://motemen.hatenablog.com/entry/2019/11/github-actions-crossbuild-rust
