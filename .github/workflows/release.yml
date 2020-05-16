@@ -56,7 +56,7 @@ jobs:
 
       - name: Zip output
         run: |
-          ls -lR target/ && zip --junk-paths sound-compose-${{ matrix.target }} target/${{ matrix.target }}/release/sound-compose{,.exe}
+          zip --junk-paths sound-compose-${{ matrix.target }} target/release/sound-compose{,.exe}
       - name: Create release
         id: create_release
         uses: actions/create-release@v1.0.0
