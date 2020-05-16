@@ -268,9 +268,13 @@ mod tests {
 
     #[test]
     fn test_check_opt_is_some() {
+        // TODO: テストについて詳細に書く
+        // TODO: 結合テスト：https://doc.rust-jp.rs/book/second-edition/ch11-03-test-organization.html#a%E7%B5%90%E5%90%88%E3%83%86%E3%82%B9%E3%83%88
         /*
          * MEMO: 自動テスト、テストのフェース
+         *       https://doc.rust-jp.rs/book/second-edition/ch11-01-writing-tests.html
          *       https://sites.google.com/site/programmerscheatcheatcheat/software-test/yunittotesuto/junit/junitwo-ben-ge-deni-shimeru-qianni
+         *       https://qiita.com/koduki/items/4fde43b68fe450c6a5d8
          */
 
         // Setup

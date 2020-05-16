@@ -33,6 +33,11 @@ pub fn deserialize_file(yaml_file: File) -> Result<SoundComposeYamlData, serde_y
     println!("yaml.rs deserialize_file()");
     println!("{:?}", yaml_file);
 
+    /*
+     * MEMO: シリアライズ・デシリアライズ
+     *       https://qiita.com/fujitayy/items/ed0033f8bb036d23710c
+     *       https://github.com/dtolnay/serde-yaml
+     *       https://docs.serde.rs/serde_yaml/index.html
     let yaml_data = serde_yaml::from_reader(yaml_file)?;
 
     return Ok(yaml_data

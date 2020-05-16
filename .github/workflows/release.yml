@@ -60,7 +60,7 @@ jobs:
       - name: Zip output
         # TODO: クロスコンパイル（target/${{ matrix.target }}/release）
         run: |
-          zip --junk-paths sound-compose-${{ matrix.target }} target/release/sound-compose{,.exe} && ls -lR .
+          zip --junk-paths sound-compose-${{ matrix.target }} target/release/sound-compose{,.exe}
       - name: Create release
         id: create_release
         uses: actions/create-release@v1.0.0
@@ -79,7 +79,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           # TODO: クロスコンパイル（target/${{ matrix.target }}/release）
-          asset_path: ./target/release/sound-compose-${{ matrix.target }}.zip
+          asset_path: sound-compose-${{ matrix.target }}.zip
           # TODO: バージョン名
           asset_name: sound-compose-${{ matrix.target }}.zip
           asset_content_type: application/zip
