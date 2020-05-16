@@ -53,6 +53,8 @@ https://qiita.com/jin237/items/59ef229a4de30cb8203b
 * What does the error `cannot be named the same as a tuple variant` mean?
 https://stackoverflow.com/questions/46065487/what-does-the-error-cannot-be-named-the-same-as-a-tuple-variant-mean
 
+* RustのLinux muslターゲット （その1：Linux向けのポータブルなバイナリを作る）
+https://blog.rust-jp.rs/tatsuya6502/posts/2019-12-statically-linked-binary/
 
 # なう
 * Command Line Toolを作ってみる in Rust
