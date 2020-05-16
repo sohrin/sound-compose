@@ -78,7 +78,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/${{ matrix.target }}/release/sound-compose-${{ matrix.target }}.zip
+          # TODO: クロスコンパイル（target/${{ matrix.target }}/release）
+          asset_path: ./target/release/sound-compose-${{ matrix.target }}.zip
           # TODO: バージョン名
           asset_name: sound-compose-${{ matrix.target }}.zip
           asset_content_type: application/zip
