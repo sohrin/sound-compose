@@ -1,7 +1,3 @@
-// extern crate pretty_env_logger;
-// #[macro_use]
-// extern crate log;
-
 use std::env;
 use std::fs::File;
 use structopt::{clap, StructOpt};
@@ -90,8 +86,6 @@ pub struct BuildOpts {
  */
 /// 引数処理
 pub fn args_proc() {
-    // pretty_env_logger::init();
-
     /*
      * MEMO: コマンドライン引数
      *       1要素目はexeファイル自体であることに注意。

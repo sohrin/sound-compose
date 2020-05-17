@@ -1,8 +1,6 @@
 use std::fs::File;
 use std::io::Error;
 use std::result::Result;
-// TODO: yamlデシリアライズ時に復活させる
-//use serde::{Serialize, Deserialize};
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct SoundComposeYamlData {

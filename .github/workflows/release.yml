@@ -60,6 +60,7 @@ jobs:
           args: --release
 
       - name: Zip output
+        # TODO: sound-composeフォルダに包んだほうが良いかも？
         # TODO: クロスコンパイル（target/${{ matrix.target }}/release）、Linuxコマンド（exeいらなさそう、WinとLinuxでifを使って実行コマンドを変える必要あり？）：zip --junk-paths sound-compose-${{ matrix.target }} target/release/sound-compose{,.exe}
         run: |
           move target\release\sound-compose.exe .
