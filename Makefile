@@ -8,18 +8,17 @@ export RUST_LOG=$(LOG_LEVEL)
 #PREFIX := $(HOME)/.cargo
 
 ifeq ($(OS),Windows_NT)
-	WIN_FLG = true
  	SLASH = \\
 else
-	WIN_FLG = false
 	SLASH = /
 endif
 
 DEBUG_TARGET = target$(SLASH)debug$(SLASH)sound-compose.exe
 DEBUG_YAML_FILE = make_debug-sound-compose.yml
 
-ifeq (WIN_FLG,true)
-	DEBUG_COMMAND = cargo build && cmd.exe /C $(DEBUG_TARGET) -f $(DEBUG_YAML_FILE) ${OPT}
+ifeq ($(OS),Windows_NT)
+	# TODO: SDL2がうまく動かないため暫定対応中
+	DEBUG_COMMAND = copy /Y make\dll\SDL2\* target\debug\ && cargo build && cmd.exe /C $(DEBUG_TARGET) -f $(DEBUG_YAML_FILE) ${OPT}
 else
 	# TODO: Linux環境でのmake debug動作確認が未
 	DEBUG_COMMAND = cargo build && $(DEBUG_TARGET) -f $(DEBUG_YAML_FILE) ${OPT}

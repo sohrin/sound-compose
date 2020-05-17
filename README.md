@@ -168,7 +168,16 @@ https://github.com/actions-rs/cargo
 * GitHub ActionsでRustプロジェクトをクロスビルドしてリリースする
 https://motemen.hatenablog.com/entry/2019/11/github-actions-crossbuild-rust
 
+* Rustでクロスコンパイル
+https://ryochack.hatenablog.com/entry/2017/10/22/014735
+
+* RustのLinux/Windows/macOS向け64bitバイナリをGitHub Actionsで生成する
+https://qiita.com/dalance/items/66d97c252b8dd9c96c29
+
 # 済（SDL2）
+* toyamaguchi / rust_opengl（GitHub）
+https://github.com/toyamaguchi/rust_opengl
+
 * SDLインストール
 https://github.com/Rust-SDL2/rust-sdl2
 http://www.libsdl.org/download-2.0.php
@@ -178,3 +187,24 @@ SDL2-devel-2.0.12-VC.zip\SDL2-2.0.12\lib\x64
 の中身を
 %USERPROFILE%\.rustup\toolchains\stable-x86_64-pc-windows-msvc\lib\rustlib\x86_64-pc-windows-msvc\lib
 にコピー
+→「コンピュータに SDL2.dll がないため、プログラムを開始できません。この問題を解決するには、プログラムを再インストールしてみてください。」エラーが発生する。ビルドで生成されたexeファイルと同階層にSDL2のdllファイル群があればえらーが発生しない。手順だと、rustupのtoolchainsフォルダの奥底に格納すればいいはずだが・・・
+[3]~/.cargo/config
+[target.x86_64-pc-windows-msvc] 
+rustflags = ["-C", "link-args=-static"] 
+→うまくいかず・・・ひとまず以下手順でdllを同じファイルにコピーすることとする。
+★SDL2暫定開発手順（SDL2アプリを動かす場合は必須）
+①プロジェクト直下にmakeフォルダ、その中にdll/SDL2フォルダを作成し、
+　「SDL2-devel-2.0.12-VC.zip\SDL2-2.0.12\lib\x64」の中身をコピー
+（makeフォルダは.gitignoe追加済）
+②make debug OPT="～～～"　を実行
+
+* WindowsでRacerのビルド（コンパイル）
+https://silight.hatenablog.jp/entry/2015/07/07/151146
+
+* Rust でしっかりとスタティックリンク
+https://qiita.com/moriai/items/b1fa7d1b43d985d408cc
+
+* 静的にリンクされた実行ファイルを生成するには？
+https://stackoverrun.com/ja/q/8748801
+
+★「Static linking with MSVC」の意味の理解が必要そう。

@@ -8,7 +8,7 @@ use structopt::{clap, StructOpt};
  */
 use crate::common::AppError;
 use crate::internal::apps::cli::common::yaml;
-use crate::internal::apps::cli::subcommand::gui;
+use crate::internal::apps::cli::subcommand::*;
 // TODO: なぜ↑だとコンパイルが通り、↓だとエラーになる？
 //       main.rsからはuse sound_compose_lib::internal::apps::cli::common::args;で参照できている。lib.rsからは？
 // use common::AppError;
@@ -77,6 +77,14 @@ pub enum Sub {
     )]
     #[structopt(setting(clap::AppSettings::ColoredHelp))]
     Gui(GuiOpts),
+
+    // TODO: ゆくゆくはGUIに統合
+    #[structopt(
+        name = "opengl",
+        about = "Exec opengl."
+    )]
+    #[structopt(setting(clap::AppSettings::ColoredHelp))]
+    Opengl(OpenglOpts),
 }
 
 #[derive(Debug, StructOpt)]
@@ -90,6 +98,10 @@ pub struct BuildOpts {
 
 #[derive(Debug, StructOpt)]
 pub struct GuiOpts {
+}
+
+#[derive(Debug, StructOpt)]
+pub struct OpenglOpts {
 }
 
 // TODO: rustdocをしっかり書く
@@ -184,6 +196,12 @@ pub fn args_proc() {
             debug!("subcommand: gui");
             println!("{:?}", guiOpts);
             gui::gui_proc();
+        },
+        Sub::Opengl(openglOpts) => {
+            // TODO: 実装中なので後で消す
+            debug!("subcommand: opengl");
+            println!("{:?}", openglOpts);
+            opengl::opengl_proc();
         },
         _ => debug!("subcommand: Others"),
     }

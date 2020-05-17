@@ -9,10 +9,20 @@ name = "sound_compose_lib"
 path = "src/lib.rs"
 
 [dependencies]
+# LOG
 log = "0.4.8"
 pretty_env_logger = "0.4.0"
-structopt = "0.3.14"
+
 serde = "1.0.110"
+# Serialize / Deserialzie
 serde_derive = "1.0.110"
 serde_yaml = "0.8.12"
+
+# ARGS
+structopt = "0.3.14"
+
+# SDK2
 sdl2 = "0.32.2"
+
+# OrbTk
+orbtk = { git = "https://github.com/redox-os/orbtk.git", branch = "develop" }
