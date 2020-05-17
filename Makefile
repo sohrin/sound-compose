@@ -1,3 +1,7 @@
+# [Args]
+# OPT = -f以外のOPT
+#  (ex.) make debug OPT="build --no-cache"
+
 LOG_LEVEL := debug
 export RUST_LOG=$(LOG_LEVEL)
 # https://qiita.com/syui/items/e071ba72ea82d583e380
@@ -15,10 +19,10 @@ DEBUG_TARGET = target$(SLASH)debug$(SLASH)sound-compose.exe
 DEBUG_YAML_FILE = make_debug-sound-compose.yml
 
 ifeq (WIN_FLG,true)
-	DEBUG_COMMAND = cargo build && cmd.exe /C $(DEBUG_TARGET) -f $(DEBUG_YAML_FILE) build --no-cache
+	DEBUG_COMMAND = cargo build && cmd.exe /C $(DEBUG_TARGET) -f $(DEBUG_YAML_FILE) ${OPT}
 else
 	# TODO: Linux環境でのmake debug動作確認が未
-	DEBUG_COMMAND = cargo build && $(DEBUG_TARGET) -f $(DEBUG_YAML_FILE) build --no-cache
+	DEBUG_COMMAND = cargo build && $(DEBUG_TARGET) -f $(DEBUG_YAML_FILE) ${OPT}
 endif
 
 debug:

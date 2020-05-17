@@ -2,8 +2,13 @@ use std::env;
 use std::fs::File;
 use structopt::{clap, StructOpt};
 
+/*
+ * MEMO: ライブラリ内のモジュールのuse文
+ *       ルートモジュールはcrate::と記載する。過去仕様では::から始まっていた。
+ */
 use crate::common::AppError;
 use crate::internal::apps::cli::common::yaml;
+use crate::internal::apps::cli::subcommand::gui;
 // TODO: なぜ↑だとコンパイルが通り、↓だとエラーになる？
 //       main.rsからはuse sound_compose_lib::internal::apps::cli::common::args;で参照できている。lib.rsからは？
 // use common::AppError;
@@ -64,7 +69,14 @@ pub enum Sub {
         about = "Exec build(bounce)."
     )]
     #[structopt(setting(clap::AppSettings::ColoredHelp))]
-    Build (BuildOpts),
+    Build(BuildOpts),
+
+    #[structopt(
+        name = "gui",
+        about = "Exec GUI."
+    )]
+    #[structopt(setting(clap::AppSettings::ColoredHelp))]
+    Gui(GuiOpts),
 }
 
 #[derive(Debug, StructOpt)]
@@ -74,6 +86,10 @@ pub struct BuildOpts {
         help = "Do not use cache when building."
     )]
     no_cache: bool,
+}
+
+#[derive(Debug, StructOpt)]
+pub struct GuiOpts {
 }
 
 // TODO: rustdocをしっかり書く
@@ -155,6 +171,22 @@ pub fn args_proc() {
 
     // TODO: 実装中なので後で消す
     println!("{:?}", yaml_data);
+
+    // サブコマンド実行
+    match opt.sub {
+        Sub::Build(buildOpts) => {
+            // TODO: 実装中なので後で消す
+            debug!("subcommand: Build");
+            println!("{:?}", buildOpts);
+        },
+        Sub::Gui(guiOpts) => {
+            // TODO: 実装中なので後で消す
+            debug!("subcommand: gui");
+            println!("{:?}", guiOpts);
+            gui::gui_proc();
+        },
+        _ => debug!("subcommand: Others"),
+    }
 
 }
 

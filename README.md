@@ -155,6 +155,9 @@ https://qiita.com/bottomzlife/items/bf36b4d057bd22e54a46
 * シンプルで応用の効くmakefileとその解説
 http://urin.github.io/posts/2013/simple-makefile-for-clang
 
+・Makefileでrunするときに引数を渡す
+https://qiita.com/tortuepin/items/9861c75853b516c8a279
+
 # 済（Github Action）
 * GitHub ActionsでReleaseを自動化する方法としたときに得た学び
 http://skawashima.com/blog/2019/12/github-actions-auto-release/
@@ -164,3 +167,14 @@ https://github.com/actions-rs/cargo
 
 * GitHub ActionsでRustプロジェクトをクロスビルドしてリリースする
 https://motemen.hatenablog.com/entry/2019/11/github-actions-crossbuild-rust
+
+# 済（SDL2）
+* SDLインストール
+https://github.com/Rust-SDL2/rust-sdl2
+http://www.libsdl.org/download-2.0.php
+[1]:SDL2-devel-2.0.12-VC.zipをダウンロードし解答
+[2]:
+SDL2-devel-2.0.12-VC.zip\SDL2-2.0.12\lib\x64
+の中身を
+%USERPROFILE%\.rustup\toolchains\stable-x86_64-pc-windows-msvc\lib\rustlib\x86_64-pc-windows-msvc\lib
+にコピー

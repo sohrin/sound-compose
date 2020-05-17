@@ -44,6 +44,9 @@ fn main() {
 
     debug!("sound-compose running...");
 
+    // SDL2の初期設定
+    let sdl_context = sdl2::init();
+
     // 引数処理
     /*
      * TODO: 関数/メソッドの呼び出し（あっているか調査が必要、特に黒ポチ5つ目）
