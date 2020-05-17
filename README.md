@@ -208,3 +208,12 @@ https://qiita.com/moriai/items/b1fa7d1b43d985d408cc
 https://stackoverrun.com/ja/q/8748801
 
 ★「Static linking with MSVC」の意味の理解が必要そう。
+
+# なう（Qt）
+* Qt（オープンソース版）をオンラインインストーラーでインストール
+http://qt-users.jp/download.qml
+※自宅のWindows 7(64bit)では「qt-unified-windows-x86-3.2.2-online.exe」を実行した。
+
+* Setting up（Rust + Qt guide）
+https://rust-qt.github.io/qt/setting_up/
+※C++ compilerはRustの環境構築時にインストールした「Visual C++ビルドツール」で良いかもしれないので一旦入れないことにした・・・
