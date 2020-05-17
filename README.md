@@ -217,3 +217,24 @@ http://qt-users.jp/download.qml
 * Setting up（Rust + Qt guide）
 https://rust-qt.github.io/qt/setting_up/
 ※C++ compilerはRustの環境構築時にインストールした「Visual C++ビルドツール」で良いかもしれないので一旦入れないことにした・・・
+※パスに「C:\Qt\5.14.2\msvc2017_64\bin」を追加
+
+* CMake
+https://cmake.org/download/
+cmake-3.17.2-win64-x64.msi
+※インストーラー内の手順でPath追加を行うこと。
+
+* エラー発生中
+C:\Users\sou>mkdir cd C:\tmp
+
+C:\Users\sou>cd C:\tmp
+
+C:\tmp>mkdir build
+
+C:\tmp>cd build
+
+C:\tmp\build>qmake C:\Qt\Examples\Qt-5.14.
+Project ERROR: Cannot run compiler 'cl'. O
+===================
+===================
+Maybe you forgot to setup the environment? 
