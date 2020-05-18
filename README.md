@@ -238,3 +238,112 @@ Project ERROR: Cannot run compiler 'cl'. O
 ===================
 ===================
 Maybe you forgot to setup the environment? 
+
+
+
+
+
+https://github.com/rust-qt/examples/tree/master/widgets/basic_form
+
+CMAKE、VC++コンパイラ、qmakeのパスを通す
+
+C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Tools\MSVC\14.23.28105\bin\Hostx64\x64
+C:\Qt\Qt5.14.1\5.14.1\mingw73_64\bin
+https://tomokiit.hatenablog.jp/entry/2018/04/16/195947
+
+QtがMinGWしかなかったので、MSVCも入れてみる。
+※以下が発生した
+・【Qt】Qt Maintenance Toolで「このアクションの実行にはひとつ以上の有効なリポジトリが必要です。」と表示される。
+https://tomokiit.hatenablog.jp/entry/2018/04/16/195947
+
+※Qt Maintenance ToolではMSVCの追加ができなかったため、Qtのオンラインインストーラーから追加した。
+qt-unified-windows-x86-3.2.2-online.exe
+MSVC 2017 64-bitのみチェックしインストール
+→後で、Qtから始まるものと、デフォルト選択のQt CreatorとDebbuging Tools for Windowsも選択して入れなおした。
+
+C:\_dev\cpp\B-Synth
+にclone
+http://gnuwin32.sourceforge.net/packages/make.htm
+インストール後以下パス追加
+C:\Program Files (x86)\GnuWin32\bin
+
+http://qt-log.open-memo.net/sub/first__how_to_use_QT.html
+
+cd C:\_dev\cpp\B-Synth
+qmake -project
+qmake
+make release
+
+C:\_dev\cpp\B-Synth>make release
+make -f Makefile.Release
+make[1]: ディレクトリ `C:/_dev/cpp/B-Synth' に入ります
+Makefile.Release:76: *** 分離記号を欠いています.  中止.
+make[1]: ディレクトリ `C:/_dev/cpp/B-Synth' から出ます
+make: *** [release] エラー 2
+
+タブ文字漏れのようで、以下の通り対応していく
+
+{release}.cpp{release\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
+	$<
+<<
+↓
+{release}.cpp{release\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Forelease\ @<<
+	$<
+	<<
+
+C:\_dev\cpp\B-Synth>make release
+make -f Makefile.Release
+make[1]: ディレクトリ `C:/_dev/cpp/B-Synth' に入ります
+cl -c -nologo -Zc:wchar_t -FS -Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus -O2 -MD -W3 -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 -wd4577 -wd4467 -EHsc -DUNICODE -D_UNICODE -DWIN32 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -DWIN64 -DNDEBUG -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -I. -I. -I..\..\..\Qt\5.14.2\msvc2017_64\include -I..\..\..\Qt\5.14.2\msvc2017_64\include\QtGui -I..\..\..\Qt\5.14.2\msvc2017_64\include\QtANGLE -I..\..\..\Qt\5.14.2\msvc2017_64\include\QtCore -Irelease -I/include -I..\..\..\Qt\5.14.2\msvc2017_64\mkspecs\win32-msvc  -Forelease\ @<<
+<< の使い方が誤っています。
+make[1]: *** [{release}.cpp{release\}.obj] エラー 255
+make[1]: ディレクトリ `C:/_dev/cpp/B-Synth' から出ます
+make: *** [release] エラー 2
+
+※makeの変わりにqmake（タブ文字漏れの対応は戻さないといけない）
+
+qt-unified-windows-x86-3.2.2-online.exe
+MSVC 2017 64-bitのみチェックしインストール
+→後で、Qtから始まるものと、デフォルト選択のQt CreatorとDebbuging Tools for Windowsも選択して入れなおした
+
+Qt CreatorにてB-Synthのエラーが発生した。
+うまく動かなかったのでプロジェクトをMSVCで作り直した・・・「sound-compose-gui」
+適当なパスに作成したプロジェクトをコピーし中に移動
+mkdir bin
+cmake .
+cmake --build .
+「Debug\sound-compose-gui.exe」をダブルクリックし、ウィンドウが表示されればOK
+
+https://stackoverflow.com/questions/42881758/cmake-does-not-produce-exe-file
+
+結局rust-qtの「qt_basic_form」のサンプルは動かず。
+
+
+
+
+■再整理
+・VC++コンパイラはRust環境設定時に済
+・Qtインストール（MSVC 2017）、MSVCで作成した空プロジェクトが起動できることを確認
+・CMakeインストール、パスを通す
+・システム環境変数の追加
+C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Tools\MSVC\14.23.28105\bin\Hostx64\x64
+C:\Qt\5.14.2\msvc2017_64\bin
+C:\Qt\Qt5.14.1\5.14.1\mingw73_64\bin
+・「https://github.com/rust-qt/examples」を実行
+cd C:\_dev\rust\cargo
+git clone https://github.com/rust-qt/examples.git
+cd examples
+cargo run --bin basic_form
+
+・Visual Studio 2017 統合環境で発生する “rc.exe が見つかりません” への対応
+https://www.xlsoft.com/jp/blog/intel/2017/07/03/visual-studio-2017-%E7%B5%B1%E5%90%88%E7%92%B0%E5%A2%83%E3%81%A7-rc-exe-%E3%81%8C%E8%A6%8B%E3%81%A4%E3%81%8B%E3%82%8A%E3%81%BE%E3%81%9B%E3%82%93-%E3%81%AE%E5%AF%BE%E5%BF%9C/
+↓以下をシステム環境変数に設定
+C:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x64
+→ダメ
+
+・MinGWのld.exeを使っている件
+システム環境変数から以下を削除
+C:\MinGW\bin\
+→ダメ
