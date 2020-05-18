@@ -2,6 +2,16 @@
 super simplified DAW app like a docker-compose
 
 
+# vscodeでやること
+* 拡張機能「Rust(rls内包)」、<s>「Native Debug」</s>「CodeLLDB」
+※以下サイトがわかりやすい
+https://qiita.com/ousttrue/items/ee617544ab737fc34c1d
+※ただしデバッグはCodeLLDBを使う。Run＞Add Configuration...でLLDBが2つ出てきた。
+　Cargo.tomlを検知して内容を生成してくれる方を使う（もう片方はlldb-mi）
+※初回のCodeLLDBは「Debug executable 'プロジェクト名'」実行後に結構待たされる。
+　vscodeの下部のメニューバーに以下が出ている間は待っていれば良いはず。
+「▷Debug executable 'プロジェクト名' (プロジェクト名)  Rust(回る歯車)[プロジェクト名] Starting」と
+
 # 未
 * Rustプロジェクトのディレクトリ構成
 https://qiita.com/dalance/items/a49dfbfdb0e5de39d908
@@ -347,3 +357,36 @@ C:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x64
 システム環境変数から以下を削除
 C:\MinGW\bin\
 →ダメ
+
+
+★GTKお試し
+* WindowsでRust環境を作ってGtk3でOpenGLする
+https://qiita.com/ousttrue/items/ee617544ab737fc34c1d
+※採用
+
+* MSYS2 installer
+https://www.msys2.org/
+[1]：msys2-x86_64-20190524.exeをダウンロードし実行、インストール
+[2]：C:\msys64\usr\bin\mintty.exeを実行→MSYS2
+[3]：pacman --needed -Sy bash pacman pacman-mirrors msys2-runtime
+[4]：pacman -S mingw-w64-x86_64-gcc
+[5]：pacman -S mingw-w64-x86_64-gdb
+[6]：pacman -S mingw-w64-x86_64-gtk3
+→インストールに失敗する・・・頓挫
+※python3は削除しないほうがいい・・・「CodeLLDB」の動作で必要になるため。
+[7]：「C:\msys64\mingw64\bin」をシステム環境変数Pathに追加（vscodeやコマンドプロンプトは再起動）
+
+* MSYS2 による gcc 開発環境の構築
+https://qiita.com/spiegel-im-spiegel/items/ba4e8d2418bdfe0c8049
+※MSYS2の使い方の参考にした。この通りには実施していない。
+
+* Windows で GTK+, Glade のインストール（MSYS2 を使用）
+https://www.kkaneko.jp/tools/win/gtkplus.html
+※MSYS2の使い方の参考にした。この通りには実施していない。
+
+
+
+
+
+
+
