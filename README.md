@@ -390,3 +390,10 @@ https://www.kkaneko.jp/tools/win/gtkplus.html
 
 
 
+■Qtのコマンドラインビルド
+git clone https://github.com/sohrin/sound-compose-gui.git
+cd sound-compose-gui
+cmake .
+cmake --build .
+
+■cloneしたQtプロジェクトのQt Creatorへのインポート
