@@ -15,11 +15,23 @@ https://dnaga392.hatenablog.com/entry/2015/06/11/000114
 * ライブラリのリンク方法をきっちり区別しよう
 https://qiita.com/argama147/items/2f636a2f4fd76f6ce130
 
+* 条件付きコンパイル（Rust公式ドキュメント）
+https://doc.rust-jp.rs/the-rust-programming-language-ja/1.6/book/conditional-compilation.html
+
 * [Rust] web-viewでGUIアプリをつくる
 https://qiita.com/osanshouo/items/7966ecbd41bc3ce611dd
 
 * これがなくては生きていけないVS Codeエクステンション10選
 https://qiita.com/rana_kualu/items/9f6919311f1407a71c5f
+
+* 共有メモリ (メモリ マップト ファイル) を利用する - C#プログラミング
+https://www.ipentec.com/document/csharp-use-memory-mapped-file
+
+* rustでtailモドキを作ってみた
+https://qiita.com/instance0000/items/d4ad45101e9208887ee0
+
+* 週アレ（５）　APIから見る共有メモリ（前編）
+http://fe0km.blog.fc2.com/blog-entry-83.html
 
 
 # vscodeでやること
@@ -441,3 +453,31 @@ cargo run --release --features "winit glium" --example text
 http://onagat.hatenablog.com/entry/2017/04/28/012532
 https://github.com/rust-windowing/glutin
 https://docs.rs/glutin/0.17.0/glutin/index.html
+
+
+
+
+
+■MSVC関連
+https://rust-qt.github.io/qt/setting_up/
+↓
+* (2019年版)コマンドラインからclを使ってコンパイルできるようにしたので共有する
+https://qiita.com/asana_yui/items/d545b5eccd994c0cdaab
+※Visual Studioを上記サイトの通りインストール、MSVC、Windows 10 SDKが重要そう
+↓
+x64 Native Tools Command Prompt for VS 2017
+で、rust-qtのSetting upのVerifying installationが動いた。
+↓
+https://rust-qt.github.io/qt/getting_started/
+↓
+https://github.com/rust-qt/examples/blob/master/widgets/basic_form/Cargo.toml
+https://github.com/rust-qt/examples/blob/master/widgets/basic_form/src/main.rs
+↓
+Caused by:
+  process didn't exit successfully: `C:\_dev\rust\sound-compose\target\debug\build\qt_widgets-94e6d9
+df575f5371\build-script-build` (exit code: 1)
+--- stdout
+Current Qt version (5.14.2) is unknown to qt_widgets crate. Using closest known version (5.14.0)
+Current target is unknown: v5.14.0 on x86_64-windows-windows-msvc
+↓
+Qtをv5.14.0で再インストールする必要がありそう
