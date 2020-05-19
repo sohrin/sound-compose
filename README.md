@@ -1,6 +1,26 @@
 # sound-compose
 super simplified DAW app like a docker-compose
 
+# 気になる
+* Rustで実装したアルゴリズムをUnityから使う
+https://qiita.com/hadashiA/items/3755786e95bbcd8f3b5d
+
+* Rustオブジェクトの削除タイミングを手動で制御する
+https://qiita.com/tatsuya6502/items/b9801d92f71e24874c9d
+※FFI（他言語関数インターフェイス）経由で、Rust のオブジェクトを他の言語に渡したい時
+
+* 【QLibrary】DLL内の関数を呼び出す
+https://dnaga392.hatenablog.com/entry/2015/06/11/000114
+
+* ライブラリのリンク方法をきっちり区別しよう
+https://qiita.com/argama147/items/2f636a2f4fd76f6ce130
+
+* [Rust] web-viewでGUIアプリをつくる
+https://qiita.com/osanshouo/items/7966ecbd41bc3ce611dd
+
+* これがなくては生きていけないVS Codeエクステンション10選
+https://qiita.com/rana_kualu/items/9f6919311f1407a71c5f
+
 
 # vscodeでやること
 * 拡張機能「Rust(rls内包)」、<s>「Native Debug」</s>「CodeLLDB」
@@ -397,3 +417,27 @@ cmake .
 cmake --build .
 
 ■cloneしたQtプロジェクトのQt Creatorへのインポート
+ビルド時にmsvcやmingwを間違えなければ大丈夫そう
+
+
+
+
+■Conrod
+* PistonDevelopers / conrodGitHub（GitHub）
+https://github.com/PistonDevelopers/conrod
+
+* サンプルソース
+https://github.com/PistonDevelopers/conrod/tree/master/backends/conrod_glium/examples
+
+* サンプル実行コマンド
+https://docs.rs/conrod/0.61.1/conrod/guide/chapter_2/index.html#running-the-conrod-examples
+※conrodフォルダ直下で実施
+cargo run --release --features "winit glium" --example all_winit_glium
+cargo run --release --features "winit glium" --example canvas
+cargo run --release --features "winit glium" --example primitives
+cargo run --release --features "winit glium" --example text
+
+* gliumライブラリについて
+http://onagat.hatenablog.com/entry/2017/04/28/012532
+https://github.com/rust-windowing/glutin
+https://docs.rs/glutin/0.17.0/glutin/index.html

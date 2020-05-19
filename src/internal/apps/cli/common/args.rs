@@ -22,11 +22,27 @@ use crate::common::AppError::MyError;
 // docker-compose コマンド概要(https://docs.docker.com/compose/reference/overview/)を参考に
 /*
  * MEMO: derive(継承)
- *       Javaのextendのようなものだが、複数指定可能。
- *       デフォルト実装を持ちオーバーライドも可能なマーカインタフェースっぽい感じ。
+ *       特定のトレイトの標準的な実装を提供する機能。
+ *       Javaの継承というよりは、デフォルト実装を持つマーカーインタフェースに近い。
+ *       ポリモーフィズムはトレイトを用い、構造体への振る舞い追加にderiveを用いることが多い様子。
  *       https://doc.rust-jp.rs/rust-by-example-ja/trait/derive.html
  *       https://qiita.com/apollo_program/items/2495dda519ae160971ed
  */
+/* TODO: トレイト（要利用）
+ *       Javaのインタフェースのようなもの。構造体と同様、アッパーキャメルケースで記載する。
+ *       メソッドは型パラメータ指定することができるが、その際に<T: トレイト名>とすることで、
+ *       トレイトが要求するメソッドを実装した構造体にポリモーフィズムな振る舞いをさせることができる。
+ *       型パラメータにトレイトで条件を課すことを「トレイト境界を付与する」という。
+ *       <T: トレイト名1 + トレイト名2 + トレイト名3>のように複数のトレイト境界を付与することも可能。
+ *       型パラメータを使わずに、引数の型を「&dyn トレイト名」（トレイトオブジェクトの指定）とする記法もある。
+ *       トレイトオブジェクトは、Vec型の型パラメータに与えることも可能（Vec<&dyn トレイト名>）
+ *       （Software Design 2020年6月号にわかりやすい説明がある）
+ */
+// TODO: Javaの継承っぽいことは？
+// https://doc.rust-jp.rs/book/second-edition/ch17-01-what-is-oo.html
+// https://riptutorial.com/ja/rust/example/22917/%E5%BD%A2%E8%B3%AA%E3%81%AE%E7%B6%99%E6%89%BF
+// https://qiita.com/nacika_ins/items/cf3782bd371da79def74
+// https://qiita.com/nacika_ins/items/cf3782bd371da79def74
 /*
  * MEMO: 構造体
  *       C言語のイメージに近い。
@@ -34,6 +50,7 @@ use crate::common::AppError::MyError;
  *       （一部のフィールドのみを可変にすることはできないことに注意）
  *       また、Javaのクラスのようにメソッドを一緒に定義することはできない。
  *       メソッドの定義は構造体を定義した後、implキーワードにより行う。
+ *       ジェネリクスで型パラメータを指定できるようにする作りも可能。
  *       https://doc.rust-jp.rs/the-rust-programming-language-ja/1.6/book/structs.html
  *       https://doc.rust-jp.rs/book/second-edition/ch05-01-defining-structs.html
  *       https://doc.rust-jp.rs/book/second-edition/ch05-02-example-structs.html
@@ -151,7 +168,10 @@ pub fn args_proc() {
      *       以下のコメントアウトコードでopt2にoptの構造体の参照を代入すると、
      *       Javaでは2つの参照型変数から1つのオブジェクトを参照できたが、
      *       スコープの切れ目が曖昧になるため、Rustでは所有権が移動したとみなされ、
-     *       古い参照型変数は使えなくなる。
+     *       古い参照型変数は初期化されていない変数となり使えなくなる（ムーブセマンティクス）。
+     *       値自体を複製させる代入（コピーセマンティクス）にしたい場合、
+     *       構造体に#[derive(Copy, Clone)]を付与する必要がある（デフォルトはムーブセマンティクス）
+     *       以上より、Javaのように2つの変数が1つのメモリを持つ（束縛する）ことはできなくなっている。
      *       // TODO: println!で使えるのは何故？
      */
     // let opt2 = opt;
