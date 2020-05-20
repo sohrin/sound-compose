@@ -8,19 +8,6 @@ super simplified DAW app like a docker-compose
 + SDL2関連のDDL配置（make/dll/sdl2/*.dll）
 
 # 気になる
-* Rustで実装したアルゴリズムをUnityから使う
-https://qiita.com/hadashiA/items/3755786e95bbcd8f3b5d
-
-* Rustオブジェクトの削除タイミングを手動で制御する
-https://qiita.com/tatsuya6502/items/b9801d92f71e24874c9d
-※FFI（他言語関数インターフェイス）経由で、Rust のオブジェクトを他の言語に渡したい時
-
-* 【QLibrary】DLL内の関数を呼び出す
-https://dnaga392.hatenablog.com/entry/2015/06/11/000114
-
-* ライブラリのリンク方法をきっちり区別しよう
-https://qiita.com/argama147/items/2f636a2f4fd76f6ce130
-
 * 条件付きコンパイル（Rust公式ドキュメント）
 https://doc.rust-jp.rs/the-rust-programming-language-ja/1.6/book/conditional-compilation.html
 
@@ -495,3 +482,38 @@ Qtをv5.14.0で再インストールする必要がありそう（念のためMS
 C:\Qt\5.14.2\msvc2017_64\bin
 ↓
 C:\Qt\5.14.0\msvc2017_64\bin
+
+
+
+
+
+■FFI
+* Rustによるダイナミックライブラリの作り方と他言語からの呼び出し
+https://qiita.com/yasuyuky/items/45f7333118fa165b670b
+
+* ダイナミック リンク ライブラリ（DLL）の基礎知識
+http://exlight.net/devel/windows/dll/windll.html
+
+* Rust の crate_type をまとめてみた
+https://qiita.com/etoilevi/items/4bd4c5b726e41f5a6689
+
+* FFI を使って Ruby から Rust の関数を呼び出す
+https://blog.mzumi.com/post/2016/10/18/hello-ffi/
+https://blog.mzumi.com/post/2016/11/04/ffi-samples/
+https://blog.mzumi.com/post/2016/11/14/ffi-pointer-samples/
+
+* QtのDynamic Link
+http://qt-log.open-memo.net/sub/system__use_dynamic_library(DLL).html
+
+* Rustで実装したアルゴリズムをUnityから使う
+https://qiita.com/hadashiA/items/3755786e95bbcd8f3b5d
+
+* Rustオブジェクトの削除タイミングを手動で制御する
+https://qiita.com/tatsuya6502/items/b9801d92f71e24874c9d
+※FFI（他言語関数インターフェイス）経由で、Rust のオブジェクトを他の言語に渡したい時
+
+* 【QLibrary】DLL内の関数を呼び出す
+https://dnaga392.hatenablog.com/entry/2015/06/11/000114
+
+* ライブラリのリンク方法をきっちり区別しよう
+https://qiita.com/argama147/items/2f636a2f4fd76f6ce130

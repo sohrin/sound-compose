@@ -1,3 +1,12 @@
+// TODO: https://qiita.com/yasuyuky/items/45f7333118fa165b670b に関する説明
+// TODO: 「#![crate_type = "dylib"]」の代わりに、Cargo.tomlに「crate-type = ["rlib", "cdylib"]
+#[no_mangle]
+pub extern fn repeat_hello(s:i32) {
+    for _ in 0..s {
+        println!("Hello");
+    }
+}
+
 extern crate pretty_env_logger;
 #[macro_use] extern crate log;
 #[macro_use] extern crate serde_derive;

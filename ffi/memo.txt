@@ -1,0 +1,5 @@
+※cargo build
+cd ffiフォルダ
+cl main_static.c ..\target\debug\sound_compose_lib.dll.lib
+copy ..\target\debug\sound_compose_lib.dll .
+main_static.exe
