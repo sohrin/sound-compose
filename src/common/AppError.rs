@@ -2,7 +2,13 @@ use std::fmt;
 
 use std::fmt::Display;
 
-// TODO: タプル構造体について（引数に見えるがタプルのフィールド定義なので、pubがないとコンストラクタがprivateと扱われる。）
+/* TODO: タプル構造体について
+ *       フィールドのない構造体、カンマ区切りで指定
+ *       参照は配列のように0から始まるインデックス（ex: 構造体変数名.0）
+ *       引数に見えるがタプルのフィールド定義なので、pubがないとコンストラクタがprivateと扱われる。
+ *       newtype patternでも利用する。
+ *       https://keens.github.io/blog/2018/12/15/rustdetsuyomenikatawotsukerupart_1__new_type_pattern/
+ */
 pub struct YamlFileNotFoundError(pub std::io::Error);
 
 // TODO: help: convert the identifier to snake case: `app_error`を対応する

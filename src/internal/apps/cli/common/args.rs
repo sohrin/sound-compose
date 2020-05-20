@@ -22,9 +22,11 @@ use crate::common::AppError::MyError;
 // docker-compose コマンド概要(https://docs.docker.com/compose/reference/overview/)を参考に
 /*
  * MEMO: derive(継承)
- *       特定のトレイトの標準的な実装を提供する機能。
+ *       トレイトの共通メソッド自動導出。特定のトレイトの標準的な実装を提供する機能。
  *       Javaの継承というよりは、デフォルト実装を持つマーカーインタフェースに近い。
  *       ポリモーフィズムはトレイトを用い、構造体への振る舞い追加にderiveを用いることが多い様子。
+ *       なお、トレイトはJavaのように継承可能（サブトレイト）
+ *       （Software Design 2020年6月号にわかりやすい説明がある）
  *       https://doc.rust-jp.rs/rust-by-example-ja/trait/derive.html
  *       https://qiita.com/apollo_program/items/2495dda519ae160971ed
  */
@@ -36,6 +38,7 @@ use crate::common::AppError::MyError;
  *       <T: トレイト名1 + トレイト名2 + トレイト名3>のように複数のトレイト境界を付与することも可能。
  *       型パラメータを使わずに、引数の型を「&dyn トレイト名」（トレイトオブジェクトの指定）とする記法もある。
  *       トレイトオブジェクトは、Vec型の型パラメータに与えることも可能（Vec<&dyn トレイト名>）
+ *       メソッドのオーバーロードは、型パラメータを持つトレイトとメソッドを複数の型で実装することで可能。
  *       （Software Design 2020年6月号にわかりやすい説明がある）
  */
 // TODO: Javaの継承っぽいことは？
@@ -205,6 +208,11 @@ pub fn args_proc() {
     println!("{:?}", yaml_data);
 
     // サブコマンド実行
+    /*
+     * TODO: match（あとでメモ）
+     *       ※matchはパターン網羅が必要（漏れているとコンパイルエラー）。"_"でその他とすることもできる。
+     *       https://doc.rust-jp.rs/the-rust-programming-language-ja/1.6/book/match.html
+     */
     match opt.sub {
         Sub::Build(buildOpts) => {
             // TODO: 実装中なので後で消す

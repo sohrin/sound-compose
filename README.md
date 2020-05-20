@@ -1,6 +1,12 @@
 # sound-compose
 super simplified DAW app like a docker-compose
 
+# TODO for dev
+* VisualStudio 2019 Communityのインストール
+* QT 5.14.0のインストール（rust-qtが対応しているのがこのバージョンまで）
+* （要確認）CMakeのインストール
++ SDL2関連のDDL配置（make/dll/sdl2/*.dll）
+
 # 気になる
 * Rustで実装したアルゴリズムをUnityから使う
 https://qiita.com/hadashiA/items/3755786e95bbcd8f3b5d
@@ -32,6 +38,10 @@ https://qiita.com/instance0000/items/d4ad45101e9208887ee0
 
 * 週アレ（５）　APIから見る共有メモリ（前編）
 http://fe0km.blog.fc2.com/blog-entry-83.html
+
+* Rustのパターンっぽいやつメモ
+https://gist.github.com/qnighy/be99c2ece6f3f4b1248608a04e104b38
+
 
 
 # vscodeでやること
@@ -480,4 +490,8 @@ df575f5371\build-script-build` (exit code: 1)
 Current Qt version (5.14.2) is unknown to qt_widgets crate. Using closest known version (5.14.0)
 Current target is unknown: v5.14.0 on x86_64-windows-windows-msvc
 ↓
-Qtをv5.14.0で再インストールする必要がありそう
+Qtをv5.14.0で再インストールする必要がありそう（念のためMSVC 2017とUWP 2017の両方を入れた）
+※Qtへの環境変数Pathも変わるため注意
+C:\Qt\5.14.2\msvc2017_64\bin
+↓
+C:\Qt\5.14.0\msvc2017_64\bin

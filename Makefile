@@ -18,10 +18,10 @@ DEBUG_YAML_FILE = make_debug-sound-compose.yml
 
 ifeq ($(OS),Windows_NT)
 	# TODO: SDL2がうまく動かないため暫定対応中
-	DEBUG_COMMAND = copy /Y make\dll\SDL2\* target\debug\ && cargo build && cmd.exe /C $(DEBUG_TARGET) -f $(DEBUG_YAML_FILE) ${OPT}
+	DEBUG_COMMAND = copy /Y make\dll\SDL2\* target\debug\ && set VERBOSE=1 && cargo build --verbose && cmd.exe /C $(DEBUG_TARGET) -f $(DEBUG_YAML_FILE) ${OPT}
 else
 	# TODO: Linux環境でのmake debug動作確認が未
-	DEBUG_COMMAND = cargo build && $(DEBUG_TARGET) -f $(DEBUG_YAML_FILE) ${OPT}
+	DEBUG_COMMAND = cargo build --verbose && $(DEBUG_TARGET) -f $(DEBUG_YAML_FILE) ${OPT}
 endif
 
 debug:
