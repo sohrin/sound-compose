@@ -4,15 +4,20 @@
     <style>
 
       html {
-        background: radial-gradient(75% 75%, circle farthest-side, white, orange, rgb(0,0,204));
-        color: #fff;
+        background: #fff;
+        color: #000;
+        font-size: 300%;
       }
 
       html:rtl {
         mapping: left-to-right(background);
       }
 
-      a { color: white; }
+      #select1 {
+        font-family: 'sans-serif';
+      }
+
+      a { color: blue; }
       code { font-weight: bold; }
 
     </style>
@@ -74,14 +79,29 @@
   <button #open>Open</button>
   <select>
     <option>Some</option>
+    <option>Item</option>
     <option>Items</option>
     <option>in select</option>
+    <!-- TODO: SJISだとoption部分は文字化けしないが、select部分（選択中のラベル）のフォントが変。Item等アスキーでも起きる。 -->
+    <option>ああああ</option>
   </select>
 
   <section class=footer>
     <p>You can inspect this window in the <a href="https://sciter.com/developers/development-tools/">Inspector tool</a>
     from the <a href="https://sciter.com/download/">Sciter SDK</a>.</p>
     <p>Run the Inspector first and then press <code>CTRL+SHIFT+I</code> in this window.</p>
+  </section>
+
+  <section class="test">
+    <p>
+      <input type="text">
+    </p>
+    <p>
+      <!-- TODO: textarea's innerHtml must be blank? -->
+      <textarea></textarea>
+      <!-- TODO: plaintext don't work -->
+      <!-- <plaintext>a</plaintext> -->
+    </p>
   </section>
 
 </body>

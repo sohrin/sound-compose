@@ -503,6 +503,21 @@ https://sciter.com/developers/development-tools/
 
 
 
+■その他WebView系
+
+・zserge / webview
+https://github.com/zserge/webview
+
+・Boscop / web-view
+https://github.com/Boscop/web-view
+
+・tauri-apps / tauri
+https://github.com/tauri-apps/tauri
+
+・reddit で話題になった Tauri と NEON についてのメモ、ついでに template-rust-backend-with-electron-frontend の開発理由についてのメモ
+https://usagi.hatenablog.jp/entry/2020/03/21/130854
+
+
 ■FFI
 * Rustによるダイナミックライブラリの作り方と他言語からの呼び出し
 https://qiita.com/yasuyuky/items/45f7333118fa165b670b
