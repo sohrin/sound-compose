@@ -17,8 +17,4 @@ serde_derive = "1.0.110"
 serde_yaml = "0.8.12"
 structopt = "0.3.14"
 sdl2 = "0.32.2"
-find_folder = "0.3.0"
-
-[dependencies.conrod]
-version = "0.53.0"
-features = ["glium", "winit"]
+sciter-rs = "0.5.50"

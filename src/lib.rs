@@ -10,7 +10,7 @@ pub extern fn repeat_hello(s:i32) {
 extern crate pretty_env_logger;
 #[macro_use] extern crate log;
 #[macro_use] extern crate serde_derive;
-#[macro_use] extern crate conrod;
+
 /*
  * MEMO: モジュール定義
  *       main.rsでもmodできるが、lib.rs側でmodし、main.rs側で使うようにする（共通部品として使える）。

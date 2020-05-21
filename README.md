@@ -485,6 +485,22 @@ C:\Qt\5.14.0\msvc2017_64\bin
 
 
 
+■Sciter
+* Sciter（公式サイト）
+
+* Sciter/HTML/C#でマルチプラットフォームなデスクトップアプリ
+https://qiita.com/shoooo/items/532ff9d3debb5754d9a1
+
+* sciter-sdk / rust-sciter（GitHub）
+https://github.com/sciter-sdk/rust-sciter
+※Getting startedの3は行っていない。
+※以下をシステム環境変数Pathに追加した。
+C:\sciter-sdk\bin.win
+C:\sciter-sdk\bin.win\x64skia
+※一部動かないものがあった。未調査。
+
+https://sciter.com/developers/development-tools/
+
 
 
 ■FFI
