@@ -1,12 +1,16 @@
 <html window-icon="https://sciter.com/wp-content/themes/sciter/!images/favicon.ico">
   <head>
     <title>Minimalistic Sciter demo</title>
+    <!-- TODO: SJISじゃないと文字化けする・・・入力は表示上問題ないが値の扱いは大丈夫か？ -->
+    <!-- TODO: 「font: system;」でリセットしないとselectやoptionが文字化けする→他のフォント指定はそのままが良い・・・ -->
     <style>
 
+      * {
+        font: system;
+      }
       html {
         background: #fff;
         color: #000;
-        font-size: 300%;
       }
 
       html:rtl {
@@ -71,7 +75,7 @@
   </head>
 <body>
 
-  <h1>Minimal Sciter Application</h1>
+  <h1>Minimal Sciter Applicationあああ</h1>
   <p>Running on <em #machine /> machine</p>
   <p>Sciter version <span #version /> rev <span #revision /></p>
 
