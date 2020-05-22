@@ -1,11 +1,9 @@
 # [Args]
 # OPT = -f以外のOPT
-#  (ex.) make debug OPT="build --no-cache"
+#  (ex.) make debug OPT="build --no-cache" ※未指定の場合は"gui"
 
 LOG_LEVEL := debug
 export RUST_LOG=$(LOG_LEVEL)
-# https://qiita.com/syui/items/e071ba72ea82d583e380
-#PREFIX := $(HOME)/.cargo
 
 ifeq ($(OS),Windows_NT)
  	SLASH = \\
@@ -21,8 +19,7 @@ ifeq ($(OPT),)
 endif
 
 ifeq ($(OS),Windows_NT)
-	# TODO: SDL2がうまく動かないため暫定対応中
-	DEBUG_COMMAND = set VERBOSE=1 && cargo build --verbose && copy /Y make\dll\SDL2\* target\debug\ && cmd.exe /C $(DEBUG_TARGET) -f $(DEBUG_YAML_FILE) ${OPT}
+	DEBUG_COMMAND = set VERBOSE=1 && cargo build --verbose && cmd.exe /C $(DEBUG_TARGET) -f $(DEBUG_YAML_FILE) ${OPT}
 else
 	# TODO: Linux環境でのmake debug動作確認が未
 	DEBUG_COMMAND = cargo build && $(DEBUG_TARGET) -f $(DEBUG_YAML_FILE) ${OPT}

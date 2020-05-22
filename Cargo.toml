@@ -3,6 +3,7 @@ name = "sound-compose"
 version = "0.1.0"
 authors = ["sohrin"]
 edition = "2018"
+build = "build.rs"
 
 [lib]
 name = "sound_compose_lib"
