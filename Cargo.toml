@@ -19,6 +19,4 @@ serde_yaml = "0.8.12"
 structopt = "0.3.14"
 sdl2 = "0.32.2"
 sciter-rs = "0.5.50"
-
-# experimental
-iced = "0.1.1"
+fltk = "^0.4"
