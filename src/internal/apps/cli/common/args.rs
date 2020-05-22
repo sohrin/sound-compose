@@ -98,6 +98,14 @@ pub enum Sub {
     #[structopt(setting(clap::AppSettings::ColoredHelp))]
     Gui(GuiOpts),
 
+    // TODO: GUIの実験が終わったら消す
+    #[structopt(
+        name = "debug",
+        about = "debug."
+    )]
+    #[structopt(setting(clap::AppSettings::ColoredHelp))]
+    Debug(GuiOpts),
+
     // TODO: ゆくゆくはGUIに統合
     #[structopt(
         name = "opengl",
@@ -224,6 +232,13 @@ pub fn args_proc() {
             debug!("subcommand: gui");
             println!("{:?}", guiOpts);
             gui::gui_proc();
+        },
+        // TODO: GUIの実験が終わったら消す
+        Sub::Debug(guiOpts) => {
+            // TODO: 実装中なので後で消す
+            debug!("subcommand: debug");
+            println!("{:?}", guiOpts);
+            debug::debug_proc();
         },
         Sub::Opengl(openglOpts) => {
             // TODO: 実装中なので後で消す

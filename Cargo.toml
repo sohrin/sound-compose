@@ -7,7 +7,8 @@ edition = "2018"
 [lib]
 name = "sound_compose_lib"
 path = "src/lib.rs"
-crate-type = ["rlib", "cdylib"]
+# MEMO: C言語からの動的リンク呼び出し（ffiフォルダ参照）を実験したい場合はコメントアウトを外すこと。
+#crate-type = ["rlib", "cdylib"]
 
 [dependencies]
 log = "0.4.8"
@@ -18,3 +19,6 @@ serde_yaml = "0.8.12"
 structopt = "0.3.14"
 sdl2 = "0.32.2"
 sciter-rs = "0.5.50"
+
+# experimental
+iced = "0.1.1"

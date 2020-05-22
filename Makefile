@@ -16,6 +16,10 @@ endif
 DEBUG_TARGET = target$(SLASH)debug$(SLASH)sound-compose.exe
 DEBUG_YAML_FILE = make_debug-sound-compose.yml
 
+ifeq ($(OPT),)
+ 	OPT = "debug"
+endif
+
 ifeq ($(OS),Windows_NT)
 	# TODO: SDL2がうまく動かないため暫定対応中
 	DEBUG_COMMAND = set VERBOSE=1 && cargo build --verbose && copy /Y make\dll\SDL2\* target\debug\ && cmd.exe /C $(DEBUG_TARGET) -f $(DEBUG_YAML_FILE) ${OPT}
