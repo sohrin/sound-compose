@@ -17,7 +17,7 @@ DEBUG_TARGET = target$(SLASH)debug$(SLASH)sound-compose.exe
 DEBUG_YAML_FILE = make_debug-sound-compose.yml
 
 ifeq ($(OPT),)
- 	OPT = "debug"
+ 	OPT = "gui"
 endif
 
 ifeq ($(OS),Windows_NT)
