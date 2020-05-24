@@ -1,6 +1,11 @@
 # sound-compose
 super simplified DAW app like a docker-compose
 
+# 直近TODO
+0. GUI検討・開発（sound-compose.ymlの構成も）
+1. cpalで波形生成＆再生（wavはrodioではできた）
+2. SuperColliderかFoxDotかTidalCycles
+
 # TODO for dev（SDL2）
 プロジェクト内にdllを含めたため準備不要（のはず）。
 
@@ -9,6 +14,19 @@ super simplified DAW app like a docker-compose
 * QT 5.14.0のインストール（rust-qtが対応しているのがこのバージョンまで）
 * CMakeのインストール（Windowsインストーラー利用）
 
+# TODO for dev（LiveCoding）
+* SuperColliderインストール
+https://supercollider.github.io/download
+※3.11.0, 64-bit
+
+* SuperColliderで始めようサウンドプログラミング
+https://qiita.com/Kazuki-Tohyama/items/fb119b49c9e7459cfa9d
+※音がなることの確認ができればOK（音量注意）
+※インストール先（sclang.exeがあるパス）をシステム環境変数Pathに追加
+
+* SuperColliderその他参考情報（実施不要）
+https://gist.github.com/naokiring/2bfcaba0ca8037aa1294dac2740e4787
+http://yota.tehis.net/supako/
 
 
 
@@ -569,3 +587,18 @@ https://dnaga392.hatenablog.com/entry/2015/06/11/000114
 
 * ライブラリのリンク方法をきっちり区別しよう
 https://qiita.com/argama147/items/2f636a2f4fd76f6ce130
+
+
+
+
+
+
+
+■きになる（nannou）
+https://github.com/nannou-org/nannou
+https://note.com/daumkuchen/n/n4771af7fb6c3
+https://ayumu-nagamatsu.com/archives/931/
+https://qiita.com/Keiwa/items/bbeebdc21311770809c5
+
+
+
