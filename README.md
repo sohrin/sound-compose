@@ -1,11 +1,27 @@
 # sound-compose
 super simplified DAW app like a docker-compose
 
-# TODO for dev
+# TODO for dev（SDL2）
+プロジェクト内にdllを含めたため準備不要（のはず）。
+
+# TODO for dev（Qt）
 * VisualStudio 2019 Communityのインストール
 * QT 5.14.0のインストール（rust-qtが対応しているのがこのバージョンまで）
-* （要確認）CMakeのインストール
-+ SDL2関連のDDL配置（make/dll/sdl2/*.dll）
+* CMakeのインストール（Windowsインストーラー利用）
+
+
+
+
+            /* MEMO : for文
+                      「for i in 0..3」の場合、iが0,1,2で実行され、3が含まれないことに注意。
+                      https://doc.rust-jp.rs/the-rust-programming-language-ja/1.6/book/loops.html
+             */
+
+
+
+
+# 要調査
+* 配布時に含める必要がある内容（SDL2.dllはどうなる？）
 
 # 気になる
 * 条件付きコンパイル（Rust公式ドキュメント）
@@ -179,6 +195,11 @@ https://qiita.com/sueken/items/87093e5941bfbc09bea8
 * rustで作るcli tool
 https://qiita.com/syui/items/e071ba72ea82d583e380
 ※test、makefile、CIが未。CIは後日？Travis CIの利点は？
+
+* Rustは何が新しいのか（基本的な言語機能の紹介）
+https://imoz.jp/note/rust-functions.html
+
+
 
 # 済（Makefile）
 * rustで作るcli tool

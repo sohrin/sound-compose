@@ -6,6 +6,12 @@ use qt_widgets::{
 };
 use std::rc::Rc;
 
+use std::fs::File;
+use std::io::BufReader;
+use rodio::Source;
+use std::thread;
+use std::time::Duration;
+
 struct Form {
     widget: QBox<QWidget>,
     line_edit: QBox<QLineEdit>,
@@ -82,12 +88,29 @@ impl Form {
 
     #[slot(SlotNoArgs)]
     unsafe fn on_button_clicked(self: &Rc<Self>) {
-        let text = self.line_edit.text();
-        QMessageBox::information_q_widget2_q_string(
-            &self.widget,
-            &qs("Example"),
-            &qs("Text: \"%1\". Congratulations!").arg_q_string(&text),
-        );
+        debug!("on_button_clicked() BEGIN.");
+
+        /* TODO: スレッド
+                 thread::spawnでクロージャーを定義してスレッド開始
+                 引数をjoin()することで待機可能。
+                 https://doc.rust-jp.rs/book/second-edition/ch16-01-threads.html
+                 https://totem3.hatenablog.jp/entry/2017/05/10/210000
+        */
+        // 別スレッドを起動し音声を再生
+        // TODO: 別スレッドでないと「スレッド モードを設定してから変更することはできません。」エラーが発生する件についてまとめる。
+        let handle = thread::spawn(|| {
+            let wav_file_path = "assets/wav/test/2608_bd.wav";
+            let device = rodio::default_output_device().unwrap();
+            let file = File::open(wav_file_path).unwrap();
+            let source = rodio::Decoder::new(BufReader::new(file)).unwrap();
+            rodio::play_raw(&device, source.convert_samples());
+            println!("{} played!", wav_file_path);
+        });
+
+        // 別スレッドの完了を待機
+        handle.join().unwrap();
+
+        debug!("on_button_clicked() END.");
     }
 
     #[slot(SlotOfQTableWidgetItemQTableWidgetItem)]
