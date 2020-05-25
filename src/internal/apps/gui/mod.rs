@@ -17,14 +17,15 @@ use std::sync::mpsc;
 use cpal::{EventLoop, StreamData, UnknownTypeOutputBuffer};
 use cpal::traits::{HostTrait, DeviceTrait, EventLoopTrait};
 
+use hound;
+
 struct Form {
     widget: QBox<QWidget>,
     line_edit: QBox<QLineEdit>,
-    button: QBox<QPushButton>,
     table: QBox<QTableWidget>,
+    rodio_wav_button: QBox<QPushButton>,
     wave_button: QBox<QPushButton>,
-
-//    wave_button_playing_flg: bool,
+    sequence_button: QBox<QPushButton>,
 }
 
 impl StaticUpcast<QObject> for Form {
@@ -42,16 +43,20 @@ impl Form {
             let line_edit = QLineEdit::new();
             layout.add_widget(&line_edit);
 
-            let button = QPushButton::from_q_string(&qs("wav file Play"));
-            button.set_enabled(false);
-            layout.add_widget(&button);
+            let rodio_wav_button = QPushButton::from_q_string(&qs("(rodio) WAV file Play"));
+            rodio_wav_button.set_enabled(false);
+            layout.add_widget(&rodio_wav_button);
 
             // MEMO: https://doc.qt.io/qt-5/qpushbutton.html
-            let wave_button = QPushButton::from_q_string(&qs("Wave Data Start"));
+            let wave_button = QPushButton::from_q_string(&qs("(cpal) Wave Data Start"));
             // MEMO: https://doc.qt.io/qt-5/qabstractbutton.html#checkable-prop
             //       http://yu00.hatenablog.com/entry/2015/09/15/185014
             wave_button.set_checkable(true);
             layout.add_widget(&wave_button);
+
+            let sequence_button = QPushButton::from_q_string(&qs("(cpal) WAV file sequence Play"));
+            sequence_button.set_enabled(true);
+            layout.add_widget(&sequence_button);
 
             let table = QTableWidget::new_0a();
             table.set_context_menu_policy(ContextMenuPolicy::CustomContextMenu);
@@ -70,15 +75,13 @@ impl Form {
 
             widget.show();
 
-//            let wave_button_playing_flg = false;
-
             let this = Rc::new(Self {
                 widget,
-                button,
                 line_edit,
                 table,
                 wave_button,
-//                wave_button_playing_flg,
+                rodio_wav_button,
+                sequence_button,
             });
             this.init();
             this
@@ -86,9 +89,6 @@ impl Form {
     }
 
     unsafe fn init(self: &Rc<Self>) {
-        self.button
-            .clicked()
-            .connect(&self.slot_on_button_clicked());
         self.line_edit
             .text_edited()
             .connect(&self.slot_on_line_edit_text_edited());
@@ -98,19 +98,25 @@ impl Form {
         self.table
             .custom_context_menu_requested()
             .connect(&self.slot_on_table_context_menu_requested());
+        self.rodio_wav_button
+            .clicked()
+            .connect(&self.slot_on_rodio_wav_button_clicked());
         self.wave_button
             .toggled()
             .connect(&self.slot_on_wave_button_clicked());
+        self.sequence_button
+            .clicked()
+            .connect(&self.slot_on_sequence_button_clicked());
     }
 
     #[slot(SlotNoArgs)]
     unsafe fn on_line_edit_text_edited(self: &Rc<Self>) {
-        self.button.set_enabled(!self.line_edit.text().is_empty());
+        self.rodio_wav_button.set_enabled(!self.line_edit.text().is_empty());
     }
 
     #[slot(SlotNoArgs)]
-    unsafe fn on_button_clicked(self: &Rc<Self>) {
-        debug!("on_button_clicked() BEGIN.");
+    unsafe fn on_rodio_wav_button_clicked(self: &Rc<Self>) {
+        debug!("on_rodio_wav_button_clicked() BEGIN.");
 
         /* TODO: スレッド
                  thread::spawnでクロージャーを定義してスレッド開始
@@ -132,7 +138,7 @@ impl Form {
         // 別スレッドの完了を待機
         handle.join().unwrap();
 
-        debug!("on_button_clicked() END.");
+        debug!("on_rodio_wav_button_clicked() END.");
     }
 
     #[slot(SlotOfBool)]
@@ -241,7 +247,7 @@ impl Form {
                 thread::sleep(Duration::from_secs(5));
                 debug!("X:after  sleep!!!");
 
-                event_loop.destroy_stream(stream_id);
+//                event_loop.destroy_stream(stream_id);
             });
         } else {
             // ボタンOFF
@@ -265,6 +271,37 @@ impl Form {
         // handle.join().unwrap();
 
         debug!("on_wave_button_clicked() END.");
+    }
+
+    #[slot(SlotNoArgs)]
+    unsafe fn on_sequence_button_clicked(self: &Rc<Self>) {
+        debug!("on_sequence_button_clicked() BEGIN.");
+
+        // wavファイル読み込み
+        let mut reader = hound::WavReader::open("assets/wav/test/2608_sd.wav").unwrap();
+        let spec = reader.spec();
+        println!("channels is {}", spec.channels);
+        println!("sample_rate is {}", spec.sample_rate);
+        println!("bits_per_sample is {}", spec.bits_per_sample);
+        match spec.sample_format {
+            hound::SampleFormat::Float => println!("SampleFormat is WAVE_FORMAT_IEEE_FLOAT"),
+            hound::SampleFormat::Int => println!("SampleFormat is WAVE_FORMAT_PCM"),
+        }
+
+        let mut count = 0;
+        let sqr_sum = reader.samples::<i16>()
+                            .fold(0.0, move |sqr_sum, s| {
+                                
+            let sample = s.unwrap() as f64;
+//            println!("sample[{}] is {}", count, sample);
+            count += 1;
+            sqr_sum + sample * sample
+        });
+        println!("RMS is {}", (sqr_sum / reader.len() as f64).sqrt());
+
+        // TODO: https://github.com/ruuda/hound/blob/master/examples/cpal.rs
+
+        debug!("on_sequence_button_clicked() END.");
     }
 
     #[slot(SlotOfQTableWidgetItemQTableWidgetItem)]

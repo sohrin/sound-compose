@@ -1004,6 +1004,7 @@ dependencies = [
  "anyhow",
  "cpal",
  "cpp_core",
+ "hound",
  "log",
  "pretty_env_logger",
  "qt_core",
