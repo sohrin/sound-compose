@@ -10,9 +10,44 @@ super simplified DAW app like a docker-compose
 プロジェクト内にdllを含めたため準備不要（のはず）。
 
 # TODO for dev（Qt）
+* 基本的には以下の通り。だが、cargo buildにおいて、環境変数の手動設定が必要と思われる。
+https://rust-qt.github.io/qt/setting_up/
 * VisualStudio 2019 Communityのインストール
 * QT 5.14.0のインストール（rust-qtが対応しているのがこのバージョンまで）
 * CMakeのインストール（Windowsインストーラー利用）
+
+※「kernel32.libを開くことができません。」
+→システム環境変数LIBに以下を追加すると通るようになる（umの中にkernel32.Libがある）
+C:\Program Files (x86)\Windows Kits\10\Lib\10.0.18362.0\um\x64
+C:\Program Files (x86)\Windows Kits\10\Lib\10.0.18362.0\ucrt_enclave\x64
+C:\Program Files (x86)\Windows Kits\10\Lib\10.0.18362.0\ucrt\x64
+→エラーが変わった
+→システム環境変数INCLUDEに以下を追加（念のためvscode終了、targetフォルダ全削除してからビルドし直し）
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include
+→QtのGUIの起動が成功した。
+
+★★★rust-qt利用時にWindowsのシステム環境変数で必要そうなもの★★★
+（確定かは不明。Qt Creatorでのビルド・CMake起動時に見ている先と思われる）
+・INCLUDE
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\shared
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\cppwinrt\winrt
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\winrt
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include
+・LIB
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\lib\x64
+C:\Program Files (x86)\Windows Kits\10\Lib\10.0.18362.0\um\x64
+C:\Program Files (x86)\Windows Kits\10\Lib\10.0.18362.0\ucrt_enclave\x64
+C:\Program Files (x86)\Windows Kits\10\Lib\10.0.18362.0\ucrt\x64
+・Path
+C:\Program Files\CMake\bin
+C:\Qt\5.14.0\msvc2017_64\bin
+C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Tools\MSVC\14.23.28105\bin\Hostx64\x64
+C:\Program Files (x86)\Windows Kits\10\bin\10.0.18362.0\x64
+
+
+
 
 # TODO for dev（LiveCoding）
 * SuperColliderインストール

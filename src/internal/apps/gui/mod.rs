@@ -278,6 +278,7 @@ impl Form {
         debug!("on_sequence_button_clicked() BEGIN.");
 
         // wavファイル読み込み
+        // https://docs.rs/hound/3.4.0/hound/struct.WavReader.html
         let mut reader = hound::WavReader::open("assets/wav/test/2608_sd.wav").unwrap();
         let spec = reader.spec();
         println!("channels is {}", spec.channels);
@@ -300,6 +301,96 @@ impl Form {
         println!("RMS is {}", (sqr_sum / reader.len() as f64).sqrt());
 
         // TODO: https://github.com/ruuda/hound/blob/master/examples/cpal.rs
+
+        // TODO: 今まではOUTPUTデバイスのみで波形のリアルタイム計算の音が鳴らせてたが、
+        //       INPUTデバイスを使えば読み込んだwavを放り込んだりできるのか？
+        // https://github.com/RustAudio/cpal/blob/master/examples/feedback.rs
+        // https://users.rust-lang.org/t/data-become-corrupted-through-tcp/35462
+        let host = cpal::default_host();
+        let input_device = host.default_input_device().expect("no output device available");
+        let output_device = host.default_output_device().expect("no output device available");
+        let format = output_device.default_output_format().unwrap();
+        println!("Using default input device: \"{}\"", input_device.name().unwrap());
+        println!("Using default output device: \"{}\"", output_device.name().unwrap());
+        println!("{:?}", format);
+
+        // MEMO: rodioのSinkは続けて再生には使えそうだが特定のタイミングで鳴らす機能ではなさそう：https://docs.rs/rodio/0.11.0/rodio/
+
+
+
+        // TODO: Cargo.tomlでは「cpal = "0.11.0"」とを指定しているのに、何故かソースが古くてコンパイルが通らない件。
+        //       以下を指定するとStreamConfigが見つかるようになる・・・が、他の記述の最新化をしてあげる必要あり。
+        //       cpal = { git = "https://github.com/RustAudio/cpal" }
+//        let config: cpal::StreamConfig = input_device.default_input_config().unwrap().into();
+
+
+        // TODO libsoundioを使ってみる。：https://qiita.com/MachiaWorx/items/b213eab29c0c2d81026c
+
+
+/*
+        let event_loop = host.event_loop();
+        let format = output_device.default_output_format().unwrap();
+        let stream_id = event_loop.build_output_stream(&output_device, &format).unwrap();
+        println!("{:?}", stream_id);
+    
+        event_loop.play_stream(stream_id);
+
+        let sequence_button_thread_handle = thread::spawn(move || {
+            thread::spawn(move || {
+                event_loop.run(move |stream_id, stream_result| {
+                    let stream_data = match stream_result {
+                        Ok(data) => data,
+                        Err(err) => {
+                            eprintln!("an error occurred on stream {:?}: {}", stream_id, err);
+                            return;
+                        }
+                        _ => return,
+                    };
+
+                    let mut samples_written: u64 = 0;
+                
+                    match stream_data {
+                        /* TODO: どういう時に必要になる？
+                        *       デフォルトのformatは「Format { channels: 2, sample_rate: SampleRate(48000), data_type: F32 }」
+                        *      だったのでF32のルートしか動かなかった。
+                        */
+                        // StreamData::Output { buffer: UnknownTypeOutputBuffer::U16(mut buffer) } => {
+                        //     println!("1");
+                        //     for elem in buffer.iter_mut() {
+                        //         *elem = u16::max_value() / 2;
+                        //     }
+                        // },
+                        // StreamData::Output { buffer: UnknownTypeOutputBuffer::I16(mut buffer) } => {
+                        //     println!("2");
+                        //     for elem in buffer.iter_mut() {
+                        //         *elem = 0;
+                        //     }
+                        // },
+                        StreamData::Output { buffer: UnknownTypeOutputBuffer::F32(mut buffer) } => {
+                            for elem in buffer.iter_mut() {
+                                // MEMO: https://gist.github.com/ablwr/c02ccd4f6c48bd90614647ec9dbd3380
+                                let time = (samples_written / format.channels as u64) as f32 
+                                        / format.sample_rate.0 as f32;
+                                let t = time / (1.0/220.0) % 1.0;
+
+                                if t < 0.5 {
+                                    *elem = 0.4;
+                                } else {
+                                    *elem = -0.4; 
+                                }      
+
+                                samples_written+=1;
+                            }
+                        },
+                        _ => (),
+                    }
+                });
+            });
+        });
+*/
+        debug!("A:before sleep...");
+        thread::sleep(Duration::from_secs(5));
+        debug!("A:after  sleep!!!");
 
         debug!("on_sequence_button_clicked() END.");
     }
