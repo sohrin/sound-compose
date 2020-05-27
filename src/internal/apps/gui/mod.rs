@@ -179,8 +179,13 @@ impl Form {
                     err_fn,
                 )?;
                 stream.play()?;
+
+                // TODO: https://github.com/RustAudio/cpal/issues/260
+                // TODO: ringbufは必要？
         
-                std::thread::sleep(std::time::Duration::from_millis(1000));
+                debug!("Y:before sleep...");
+                std::thread::sleep(std::time::Duration::from_millis(2000));
+                debug!("Y:before sleep!!!");
         
                 Ok(())
             }

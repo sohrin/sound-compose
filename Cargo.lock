@@ -948,6 +948,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7fe5bd57d1d7414c6b5ed48563a2c855d995ff777729dcd91c369ec7fea395ae"
 
 [[package]]
+name = "ringbuf"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7c2b29d87cfbdce39849012bb5020fff88b8f01f4f5b55846a0b6ef360774eae"
+
+[[package]]
 name = "ritual_build"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1153,6 +1159,7 @@ dependencies = [
  "qt_gui",
  "qt_ui_tools",
  "qt_widgets",
+ "ringbuf",
  "rodio",
  "sdl2",
  "serde",
