@@ -19,7 +19,7 @@ ifeq ($(OPT),)
 endif
 
 ifeq ($(OS),Windows_NT)
-	DEBUG_COMMAND = set VERBOSE=1 && cargo build --verbose && cmd.exe /C $(DEBUG_TARGET) -f $(DEBUG_YAML_FILE) ${OPT}
+	DEBUG_COMMAND = set VERBOSE=1 && cargo build --verbose && cmd.exe /C $(DEBUG_TARGET) -f $(DEBUG_YAML_FILE) ${OPT} > make_debug.log
 else
 	# TODO: Linux環境でのmake debug動作確認が未
 	DEBUG_COMMAND = cargo build && $(DEBUG_TARGET) -f $(DEBUG_YAML_FILE) ${OPT}

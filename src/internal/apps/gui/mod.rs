@@ -5,7 +5,7 @@ use qt_widgets::{
     QTableWidgetItem, QVBoxLayout, QWidget, SlotOfQPoint, SlotOfQTableWidgetItemQTableWidgetItem,
 };
 use std::rc::Rc;
-
+use std::fmt::Debug;
 use std::fs::File;
 use std::io::BufReader;
 use rodio::Source;
@@ -155,7 +155,7 @@ impl Form {
             // ボタンON
             self.wave_button.set_text(&qs("Wave Data Stop"));
 
-            fn run<T>(device: &cpal::Device, config: &cpal::StreamConfig) -> Result<(), anyhow::Error>
+            fn run<T:Debug>(device: &cpal::Device, config: &cpal::StreamConfig) -> Result<(), anyhow::Error>        // TODO: 理解のために<T:Debug>にしているので、後で<T>に戻したほうがよさそう。
             where
                 T: cpal::Sample,
             {
@@ -179,13 +179,22 @@ impl Form {
                     err_fn,
                 )?;
                 stream.play()?;
-
-                // TODO: https://github.com/RustAudio/cpal/issues/260
-                // TODO: ringbufは必要？
         
                 debug!("Y:before sleep...");
                 std::thread::sleep(std::time::Duration::from_millis(2000));
                 debug!("Y:before sleep!!!");
+
+                stream.pause()?;
+
+                debug!("Z:before sleep...");
+                std::thread::sleep(std::time::Duration::from_millis(2000));
+                debug!("Z:before sleep!!!");
+
+                stream.play()?;
+
+                debug!("W:before sleep...");
+                std::thread::sleep(std::time::Duration::from_millis(2000));
+                debug!("W:before sleep!!!");
         
                 Ok(())
             }
@@ -194,10 +203,30 @@ impl Form {
              *       前後を探してくれる（run内でwrite_data関数を呼び出しているが、関数定義が後にあってもエラーとならない）
              *       https://stackoverflow.com/questions/26685666/a-local-function-in-rust
              */
-            fn write_data<T>(output: &mut [T], channels: usize, next_sample: &mut dyn FnMut() -> f32)
+            /* TODO: 型パラメータに特性を与えることも可能な件について。
+             *       https://www.finddevguides.com/s/rust/rust_generic_types
+             */
+            fn write_data<T:Debug>(output: &mut [T], channels: usize, next_sample: &mut dyn FnMut() -> f32)
             where
                 T: cpal::Sample,
             {
+                // TODO: 標準出力を後で消す
+                // MEMO: channelsは2だった。LとR？
+                println!("channels:{:?}", channels);
+                println!("output_elem:{:?}", output);
+                // MEMO: https://webbibouroku.com/Blog/Article/rust-iter-index
+                // for (i, val) in (*output).iter().enumerate() {
+                //     println!("output_elem:{:?}", val);
+                // }
+
+                /* TODO: chunks_mutメソッドとは？最終的に以下を返すようだ。&'a mut [T]　と　&mut dyn FnMut() -> f32　の関係は？'aは「ライフライムa」らしいが・・・ライフタイムとは？
+                 *       pub struct ChunksMut<'a, T: 'a> {
+                 *           v: &'a mut [T],
+                 *           chunk_size: usize,
+                 *       }
+                 *       https://doc.rust-jp.rs/the-rust-programming-language-ja/1.6/book/lifetimes.html
+                 *       https://qiita.com/mosh/items/709effc9e451b9b8a5f4
+                 */
                 for frame in output.chunks_mut(channels) {
                     let value: T = cpal::Sample::from::<f32>(&next_sample());
                     for sample in frame.iter_mut() {

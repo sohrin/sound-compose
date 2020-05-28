@@ -2,3 +2,6 @@
 
 # Bundled dll
 /*.dll
+
+# log (ex. make_debug.log)
+/*.log
