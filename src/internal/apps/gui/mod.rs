@@ -14,6 +14,11 @@ use std::time::Duration;
 use std::sync::mpsc::{Sender, Receiver};
 use std::sync::mpsc;
 
+use time_calc::bars::Bars;
+use time_calc::calc::SampleHz;
+use time_calc::calc::Bpm;
+use time_calc::time_sig::TimeSig;
+
 use cpal::traits::{HostTrait, DeviceTrait, StreamTrait};
 
 use hound;
@@ -364,17 +369,137 @@ impl Form {
     unsafe fn on_sequence_button_clicked(self: &Rc<Self>) {
         debug!("on_sequence_button_clicked() BEGIN.");
 
-//         // wavファイル読み込み
-//         // https://docs.rs/hound/3.4.0/hound/struct.WavReader.html
-//         let mut reader = hound::WavReader::open("assets/wav/test/2608_sd.wav").unwrap();
-//         let spec = reader.spec();
-//         println!("channels is {}", spec.channels);
-//         println!("sample_rate is {}", spec.sample_rate);
-//         println!("bits_per_sample is {}", spec.bits_per_sample);
-//         match spec.sample_format {
-//             hound::SampleFormat::Float => println!("SampleFormat is WAVE_FORMAT_IEEE_FLOAT"),
-//             hound::SampleFormat::Int => println!("SampleFormat is WAVE_FORMAT_PCM"),
-//         }
+        fn run<T>(device: &cpal::Device, config: &cpal::StreamConfig) -> Result<(), anyhow::Error>
+        where
+            T: cpal::Sample,
+        {
+            let sample_rate = config.sample_rate.0 as f32;
+            let channels = config.channels as usize;
+
+            // wavファイル読み込み
+            // https://docs.rs/hound/3.4.0/hound/struct.WavReader.html
+            let mut reader = hound::WavReader::open("assets/wav/test/2608_sd.wav").unwrap();
+            let spec = reader.spec();
+            println!("channels is {}", spec.channels);
+            println!("sample_rate is {}", spec.sample_rate);
+            println!("bits_per_sample is {}", spec.bits_per_sample);
+            match spec.sample_format {
+                hound::SampleFormat::Float => println!("SampleFormat is WAVE_FORMAT_IEEE_FLOAT"),
+                hound::SampleFormat::Int => println!("SampleFormat is WAVE_FORMAT_PCM"),
+            }
+            let samples = reader.samples::<i16>();
+
+            // 1秒44100サンプル、BPM155、4つ打ちの場合のwavサンプル配置タイミングをtime_calcで計算
+            const SAMPLE_HZ: SampleHz = 44_100.0;
+            let bpm: Bpm = 155.0;
+            let time_sig = TimeSig{top: 4, bottom: 4};
+            println!(
+                "Convert 1 bars to samples where the tempo is 155bpm, the time signature is 4/4
+                    and the sample rate is 44,100 samples per second: {}",
+                Bars(1).samples(bpm, time_sig, SAMPLE_HZ)
+            );
+            println!(
+                "Convert 2 bars to samples where the tempo is 155bpm, the time signature is 4/4
+                    and the sample rate is 44,100 samples per second: {}",
+                Bars(2).samples(bpm, time_sig, SAMPLE_HZ)
+            );
+            println!(
+                "Convert 3 bars to samples where the tempo is 155bpm, the time signature is 4/4
+                    and the sample rate is 44,100 samples per second: {}",
+                Bars(3).samples(bpm, time_sig, SAMPLE_HZ)
+            );
+            println!(
+                "Convert 4 bars to samples where the tempo is 155bpm, the time signature is 4/4
+                    and the sample rate is 44,100 samples per second: {}",
+                Bars(4).samples(bpm, time_sig, SAMPLE_HZ)
+            );
+
+            // TODO: バスドラ4つ打ちのサンプルベクタをコンパイルエラーなく完成させる。
+
+            // let length = Bars(4).samples(bpm, time_sig, SAMPLE_HZ) as usize;
+            // let mut fourBassDrumsVec: Vec<i16> = vec![0; length];
+
+            // let mut idx: usize = 0;
+            // for (i, val) in samples.enumerate() {
+            //     fourBassDrumsVec[idx] = val.unwrap();
+            //     idx += 1;
+            // }
+
+            // let mut idx = Bars(1).samples(bpm, time_sig, SAMPLE_HZ) as usize;
+            // for (i, val) in samples.enumerate() {
+            //     fourBassDrumsVec[idx] = val.unwrap();
+            //     idx += 1;
+            // }
+
+            // let mut idx = Bars(2).samples(bpm, time_sig, SAMPLE_HZ) as usize;
+            // for (i, val) in samples.enumerate() {
+            //     fourBassDrumsVec[idx] = val.unwrap();
+            //     idx += 1;
+            // }
+            
+            // let mut idx = Bars(3).samples(bpm, time_sig, SAMPLE_HZ) as usize;
+            // for (i, val) in samples.enumerate() {
+            //     fourBassDrumsVec[idx] = val.unwrap();
+            //     idx += 1;
+            // }
+
+            // println!("fourBassDrumsVec:[{:?}]", fourBassDrumsVec);
+
+            // https://www.fabrica-com.co.jp/techblog/technology/1118/
+            // のノイズジェネレーターの代わりに、1小節分のサンプルVecを作って
+            // メソッドで呼ぶたびにサンプルを取り出せれば良いのでは。
+            let mut sample_clock = 0f32;
+            let mut next_value = move || {
+                sample_clock = (sample_clock + 1.0) % sample_rate;
+                (sample_clock * 440.0 * 2.0 * 3.141592 / sample_rate).sin()
+            };
+
+            let err_fn = |err| eprintln!("an error occurred on stream: {}", err);
+
+            let stream = device.build_output_stream(
+                config,
+                move |data: &mut [T], _: &cpal::OutputCallbackInfo| {
+                    write_data(data, channels, &mut next_value)
+                },
+                err_fn,
+            )?;
+            stream.play()?;
+
+            debug!("zz:before sleep...");
+            std::thread::sleep(std::time::Duration::from_millis(4000));
+            debug!("zz:before sleep!!!");
+
+            Ok(())
+        }
+
+        fn write_data<T>(output: &mut [T], channels: usize, next_sample: &mut dyn FnMut() -> f32)
+        where
+            T: cpal::Sample,
+        {
+            for frame in output.chunks_mut(channels) {
+                let value: T = cpal::Sample::from::<f32>(&next_sample());
+                for sample in frame.iter_mut() {
+                    *sample = value;
+                }
+            }
+        }
+
+        let sequence_button_thread_handle = thread::spawn(move || {
+            let host = cpal::default_host();
+            let device = host.default_output_device().expect("no output device available");
+            let config = device.default_output_config().expect("no output config available");
+
+            match config.sample_format() {
+                cpal::SampleFormat::F32 => run::<f32>(&device, &config.into()).unwrap(),
+                cpal::SampleFormat::I16 => run::<i16>(&device, &config.into()).unwrap(),
+                cpal::SampleFormat::U16 => run::<u16>(&device, &config.into()).unwrap(),
+            }
+        });
+
+
+
+
+
 
 //         let mut count = 0;
 //         let sqr_sum = reader.samples::<i16>()
