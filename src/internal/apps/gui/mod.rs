@@ -389,7 +389,6 @@ impl Form {
             }
             let samples = reader.samples::<i16>();
 
-            // 1秒44100サンプル、BPM155、4つ打ちの場合のwavサンプル配置タイミングをtime_calcで計算
             const SAMPLE_HZ: SampleHz = 44_100.0;
             let bpm: Bpm = 155.0;
             let time_sig = TimeSig{top: 4, bottom: 4};
@@ -414,44 +413,79 @@ impl Form {
                 Bars(4).samples(bpm, time_sig, SAMPLE_HZ)
             );
 
-            // TODO: バスドラ4つ打ちのサンプルベクタをコンパイルエラーなく完成させる。
+            // TODO: Vecについて　Rustのデータ構造について調べた - std::vec::Vec　https://qiita.com/Tamamu/items/6fd8f344cd9b4a20b7c2
+            let mut samplesVec: Vec<i16> = Vec::new();
+            for (i, sampleOption) in samples.enumerate() {
+                samplesVec.push(sampleOption.unwrap());
+            }
 
-            // let length = Bars(4).samples(bpm, time_sig, SAMPLE_HZ) as usize;
-            // let mut fourBassDrumsVec: Vec<i16> = vec![0; length];
+            // BPM155バスドラ4つ打ちジェネレーター
+            // TODO: 現在はBPM155バスドラ4つ打ち固定だが、記法からジェネレーターを生成できるようにする。
+            // TODO: 拍ではなく小節になっている！！ use time_calc::beats::Beats;
 
-            // let mut idx: usize = 0;
-            // for (i, val) in samples.enumerate() {
-            //     fourBassDrumsVec[idx] = val.unwrap();
-            //     idx += 1;
-            // }
+            let length = Bars(4).samples(bpm, time_sig, SAMPLE_HZ) as usize;
+            let mut fourBassDrumsVec: Vec<i16> = vec![0; length];
 
-            // let mut idx = Bars(1).samples(bpm, time_sig, SAMPLE_HZ) as usize;
-            // for (i, val) in samples.enumerate() {
-            //     fourBassDrumsVec[idx] = val.unwrap();
-            //     idx += 1;
-            // }
+            let mut idx: usize = 0;
+            for sample in samplesVec.clone() {
+                fourBassDrumsVec[idx] = sample;
+                idx += 1;
+            }
 
-            // let mut idx = Bars(2).samples(bpm, time_sig, SAMPLE_HZ) as usize;
-            // for (i, val) in samples.enumerate() {
-            //     fourBassDrumsVec[idx] = val.unwrap();
-            //     idx += 1;
-            // }
+            let mut idx = Bars(1).samples(bpm, time_sig, SAMPLE_HZ) as usize;
+            for sample in samplesVec.clone() {
+                fourBassDrumsVec[idx] = sample;
+                idx += 1;
+            }
+
+            let mut idx = Bars(2).samples(bpm, time_sig, SAMPLE_HZ) as usize;
+            for sample in samplesVec.clone() {
+                fourBassDrumsVec[idx] = sample;
+                idx += 1;
+            }
             
-            // let mut idx = Bars(3).samples(bpm, time_sig, SAMPLE_HZ) as usize;
-            // for (i, val) in samples.enumerate() {
-            //     fourBassDrumsVec[idx] = val.unwrap();
-            //     idx += 1;
-            // }
+            let mut idx = Bars(3).samples(bpm, time_sig, SAMPLE_HZ) as usize;
+            for sample in samplesVec.clone() {
+                fourBassDrumsVec[idx] = sample;
+                idx += 1;
+            }
 
-            // println!("fourBassDrumsVec:[{:?}]", fourBassDrumsVec);
+            // TODO: 後で場所変更
+            struct Generator {
+                samplesVec: Vec<i16>,
+                nextIdx: usize,
+            }
+            impl Generator {
+                // TODO: メソッド構文のおさらい　https://doc.rust-jp.rs/the-rust-programming-language-ja/1.6/book/method-syntax.html
+                fn new(samplesVec: Vec<i16>) -> Generator {
+                    println!("Generater from samplesVec:[{:?}]", samplesVec);
+                    Generator {
+                        samplesVec: samplesVec,
+                        nextIdx: 0,
+                    }
+                }
+                fn next(&mut self) -> i16 {
+                    let ret = self.samplesVec.get(self.nextIdx).unwrap();
+                    self.nextIdx += 1;
+                    if self.nextIdx == self.samplesVec.capacity() {
+                        println!("★rooped!!!");
+                        self.nextIdx = 0;
+                    }
+                    return *ret;
+                }
+            }
+            let mut generator = Generator::new(fourBassDrumsVec);
+            println!("generator.next():[{}]", generator.next());
+            
 
             // https://www.fabrica-com.co.jp/techblog/technology/1118/
             // のノイズジェネレーターの代わりに、1小節分のサンプルVecを作って
             // メソッドで呼ぶたびにサンプルを取り出せれば良いのでは。
             let mut sample_clock = 0f32;
             let mut next_value = move || {
-                sample_clock = (sample_clock + 1.0) % sample_rate;
-                (sample_clock * 440.0 * 2.0 * 3.141592 / sample_rate).sin()
+                // sample_clock = (sample_clock + 1.0) % sample_rate;
+                // (sample_clock * 440.0 * 2.0 * 3.141592 / sample_rate).sin()
+                generator.next()
             };
 
             let err_fn = |err| eprintln!("an error occurred on stream: {}", err);
@@ -459,17 +493,29 @@ impl Form {
             let stream = device.build_output_stream(
                 config,
                 move |data: &mut [T], _: &cpal::OutputCallbackInfo| {
-                    write_data(data, channels, &mut next_value)
+                    write_data_pcm(data, channels, &mut next_value)
                 },
                 err_fn,
             )?;
             stream.play()?;
 
             debug!("zz:before sleep...");
-            std::thread::sleep(std::time::Duration::from_millis(4000));
+            std::thread::sleep(std::time::Duration::from_millis(10000));
             debug!("zz:before sleep!!!");
 
             Ok(())
+        }
+
+        fn write_data_pcm<T>(output: &mut [T], channels: usize, next_sample: &mut dyn FnMut() -> i16)
+        where
+            T: cpal::Sample,
+        {
+            for frame in output.chunks_mut(channels) {
+                let value: T = cpal::Sample::from::<i16>(&next_sample());
+                for sample in frame.iter_mut() {
+                    *sample = value;
+                }
+            }
         }
 
         fn write_data<T>(output: &mut [T], channels: usize, next_sample: &mut dyn FnMut() -> f32)
