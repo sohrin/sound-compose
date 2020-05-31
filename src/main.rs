@@ -40,6 +40,7 @@ fn main() {
      *       https://crates.io/crates/pretty_env_logger
      */
     env::set_var("RUST_LOG", "debug");
+    env::set_var("RUST_BACKTRACE", "1");
     pretty_env_logger::init();
 
     debug!("sound-compose running...");

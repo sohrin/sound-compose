@@ -15,10 +15,12 @@ use std::sync::mpsc::{Sender, Receiver};
 use std::sync::mpsc;
 
 use time_calc::bars::Bars;
+use time_calc::beats::Beats;
 use time_calc::calc::SampleHz;
 use time_calc::calc::Bpm;
 use time_calc::time_sig::TimeSig;
 
+use cpal::SampleRate;
 use cpal::traits::{HostTrait, DeviceTrait, StreamTrait};
 
 use hound;
@@ -131,7 +133,7 @@ impl Form {
         // 別スレッドを起動しwavファイルを再生
         // TODO: 別スレッドでないと「スレッド モードを設定してから変更することはできません。」エラーが発生する件についてまとめる。
         let handle = thread::spawn(|| {
-            let wav_file_path = "assets/wav/test/2608_bd.wav";
+            let wav_file_path = "assets/wav/test/2608_sd.wav";
             let device = rodio::default_output_device().unwrap();
             let file = File::open(wav_file_path).unwrap();
             let source = rodio::Decoder::new(BufReader::new(file)).unwrap();
@@ -378,7 +380,7 @@ impl Form {
 
             // wavファイル読み込み
             // https://docs.rs/hound/3.4.0/hound/struct.WavReader.html
-            let mut reader = hound::WavReader::open("assets/wav/test/2608_sd.wav").unwrap();
+            let mut reader = hound::WavReader::open("assets/wav/test/2608_bd.wav").unwrap();
             let spec = reader.spec();
             println!("channels is {}", spec.channels);
             println!("sample_rate is {}", spec.sample_rate);
@@ -387,11 +389,13 @@ impl Form {
                 hound::SampleFormat::Float => println!("SampleFormat is WAVE_FORMAT_IEEE_FLOAT"),
                 hound::SampleFormat::Int => println!("SampleFormat is WAVE_FORMAT_PCM"),
             }
-            let samples = reader.samples::<i16>();
 
             const SAMPLE_HZ: SampleHz = 44_100.0;
             let bpm: Bpm = 155.0;
             let time_sig = TimeSig{top: 4, bottom: 4};
+
+            let mut samples = reader.samples::<i16>();
+
             println!(
                 "Convert 1 bars to samples where the tempo is 155bpm, the time signature is 4/4
                     and the sample rate is 44,100 samples per second: {}",
@@ -412,6 +416,29 @@ impl Form {
                     and the sample rate is 44,100 samples per second: {}",
                 Bars(4).samples(bpm, time_sig, SAMPLE_HZ)
             );
+            println!(
+                "Convert 1 beats to samples where the tempo is 155bpm,
+                    and the sample rate is 44,100 samples per second: {}",
+                Beats(1).samples(bpm, SAMPLE_HZ)
+            );
+            println!(
+                "Convert 1 beats to samples where the tempo is 155bpm,
+                    and the sample rate is 44,100 samples per second: {}",
+                Beats(2).samples(bpm, SAMPLE_HZ)
+            );
+
+            println!(
+                "Convert 1 beats to samples where the tempo is 155bpm,
+                    and the sample rate is 44,100 samples per second: {}",
+                Beats(3).samples(bpm, SAMPLE_HZ)
+            );
+
+            println!(
+                "Convert 1 beats to samples where the tempo is 155bpm,
+                    and the sample rate is 44,100 samples per second: {}",
+                Beats(4).samples(bpm, SAMPLE_HZ)
+            );
+
 
             // TODO: Vecについて　Rustのデータ構造について調べた - std::vec::Vec　https://qiita.com/Tamamu/items/6fd8f344cd9b4a20b7c2
             let mut samplesVec: Vec<i16> = Vec::new();
@@ -423,32 +450,108 @@ impl Form {
             // TODO: 現在はBPM155バスドラ4つ打ち固定だが、記法からジェネレーターを生成できるようにする。
             // TODO: 拍ではなく小節になっている！！ use time_calc::beats::Beats;
 
-            let length = Bars(4).samples(bpm, time_sig, SAMPLE_HZ) as usize;
+            let length = Beats(4).samples(bpm, SAMPLE_HZ) as usize;
             let mut fourBassDrumsVec: Vec<i16> = vec![0; length];
 
             let mut idx: usize = 0;
             for sample in samplesVec.clone() {
-                fourBassDrumsVec[idx] = sample;
+                fourBassDrumsVec[idx] += sample;
                 idx += 1;
             }
 
-            let mut idx = Bars(1).samples(bpm, time_sig, SAMPLE_HZ) as usize;
+            let mut idx = Beats(1).samples(bpm, SAMPLE_HZ) as usize;
+            let mut bar_div_08_len = (idx / 2) as usize;
+            let mut bar_div_16_len = (bar_div_08_len / 2) as usize;
             for sample in samplesVec.clone() {
-                fourBassDrumsVec[idx] = sample;
+                fourBassDrumsVec[idx] += sample;
                 idx += 1;
             }
 
-            let mut idx = Bars(2).samples(bpm, time_sig, SAMPLE_HZ) as usize;
+            let mut idx = Beats(2).samples(bpm, SAMPLE_HZ) as usize;
             for sample in samplesVec.clone() {
-                fourBassDrumsVec[idx] = sample;
+                fourBassDrumsVec[idx] += sample;
                 idx += 1;
             }
             
-            let mut idx = Bars(3).samples(bpm, time_sig, SAMPLE_HZ) as usize;
+            let mut idx = Beats(3).samples(bpm, SAMPLE_HZ) as usize;
+            let mut beats_03_25_len = idx + bar_div_16_len;
+            let mut beats_03_50_len = idx + bar_div_08_len;
+            let mut beats_03_75_len = beats_03_50_len + bar_div_16_len;
             for sample in samplesVec.clone() {
-                fourBassDrumsVec[idx] = sample;
+                fourBassDrumsVec[idx] += sample;
                 idx += 1;
             }
+
+            let mut idx = beats_03_25_len;
+            for sample in samplesVec.clone() {
+                fourBassDrumsVec[idx] += sample;
+                idx += 1;
+            }
+
+            let mut idx = beats_03_50_len;
+            for sample in samplesVec.clone() {
+                fourBassDrumsVec[idx] += sample;
+                idx += 1;
+            }
+
+            let mut idx = beats_03_75_len;
+            for sample in samplesVec.clone() {
+                fourBassDrumsVec[idx] += sample;
+                idx += 1;
+            }
+
+
+
+            // スネアドラム
+            let mut reader = hound::WavReader::open("assets/wav/test/2608_sd.wav").unwrap();
+            let mut samples = reader.samples::<i16>();
+
+            let mut samplesVec: Vec<i16> = Vec::new();
+            for (i, sampleOption) in samples.enumerate() {
+                samplesVec.push(sampleOption.unwrap());
+            }
+            
+            let mut idx = Beats(1).samples(bpm, SAMPLE_HZ) as usize;
+            println!("スネアドラム2拍目");
+            for sample in samplesVec.clone() {
+                // TODO: i16で表現できない数値になった場合にどうするか？
+                println!("idx:[{}]", idx);
+                println!("fourBassDrumsVec[idx]:[{}]", fourBassDrumsVec[idx]);
+                println!("sample:[{}]", sample);
+                let added = fourBassDrumsVec[idx] as i64;
+                let add = sample as i64;
+                if added + add > 32767 {
+                    info!("OVER LIMITTER!");
+                    fourBassDrumsVec[idx] = 32767;
+                } else if added + add < -32768 {
+                    info!("UNDER LIMITTER!");
+                    fourBassDrumsVec[idx] = -32768;
+                } else {
+                    fourBassDrumsVec[idx] += sample;
+                }
+                idx += 1;
+            }
+            
+            println!("スネアドラム4拍目");
+            let mut idx = Beats(3).samples(bpm, SAMPLE_HZ) as usize;
+            for sample in samplesVec.clone() {
+                println!("idx:[{}]", idx);
+                println!("fourBassDrumsVec[idx]:[{}]", fourBassDrumsVec[idx]);
+                println!("sample:[{}]", sample);
+                let added = fourBassDrumsVec[idx] as i64;
+                let add = sample as i64;
+                if added + add > 32767 {
+                    info!("OVER LIMITTER!");
+                    fourBassDrumsVec[idx] = 32767;
+                } else if added + add < -32768 {
+                    info!("UNDER LIMITTER!");
+                    fourBassDrumsVec[idx] = -32768;
+                } else {
+                    fourBassDrumsVec[idx] += sample;
+                }
+                idx += 1;
+            }
+
 
             // TODO: 後で場所変更
             struct Generator {
@@ -458,7 +561,7 @@ impl Form {
             impl Generator {
                 // TODO: メソッド構文のおさらい　https://doc.rust-jp.rs/the-rust-programming-language-ja/1.6/book/method-syntax.html
                 fn new(samplesVec: Vec<i16>) -> Generator {
-                    println!("Generater from samplesVec:[{:?}]", samplesVec);
+//                    println!("Generater from samplesVec:[{:?}]", samplesVec);
                     Generator {
                         samplesVec: samplesVec,
                         nextIdx: 0,
@@ -533,7 +636,48 @@ impl Form {
         let sequence_button_thread_handle = thread::spawn(move || {
             let host = cpal::default_host();
             let device = host.default_output_device().expect("no output device available");
-            let config = device.default_output_config().expect("no output config available");
+            let supported_configs = device.supported_output_configs().expect("no output supported_configs available");
+
+            // TODO: 家のRealtek High Definition Audioのサウンドマネージャで
+            //       規定の形式を「16ビット, 44100 Hz」にすると、
+            //       現在のコードでBPM155の4つ打ちになるが、
+            //       「24ビット, 48000Hz」にするとBPM155より早くなる件。
+            //       ※1秒あたりのサンプル数のズレのためだと思われる。
+            //         SupportedStreamConfigRangeの内容を見ると、サンプルレートがmax・minともに48000なので
+            //         デバイス・コンフィグの設定を44100に変えることはできない。
+            //         サウンドデバイスのサンプルレート設定でwavを読み込む必要があるか・・・？
+            //       ※wavファイルのサンプルレートについて：https://leez.info/archives/2699
+            //       ※https://blog.goo.ne.jp/jsp_job/e/b2cbf680f1e9fbc374ecb6f0f1837237
+
+            // TODO: デバイスに合わせてリサンプリング
+            //       https://lib.rs/crates/samplerate
+            //       https://github.com/prior99/rust-samplerate
+            for (i, supported_config) in supported_configs.enumerate() {
+                println!("supported_config{}:{:?}", i, supported_config);
+                // MEM
+                // const SAMPLE_HZ: SampleRate = SampleRate(44_100);
+                // let mut config = supported_config.with_sample_rate(SAMPLE_HZ);
+            }
+
+            let mut config = device.default_output_config().expect("no output config available");
+            // MEMO: サンプルレートの初期値が48000だったので44100に設定
+            // TODO: https://github.com/nannou-org/nannou/pull/26/files
+            // let min_sample_rate = supported_format.min_samples_rate;
+            // let max_sample_rate = supported_format.max_samples_rate;
+            // let mut format = supported_format.with_max_samples_rate();
+    
+            // if let Some(ch) = channels {
+            //     format.channels.resize(ch, cpal::ChannelPosition::FrontLeft);
+            // }
+            // if let Some(sr) = sample_rate {
+            //     format.samples_rate = cpal::SamplesRate(sr);
+            // } else {
+            //     let default = cpal::SamplesRate(super::DEFAULT_SAMPLE_RATE);
+            //     if default <= max_sample_rate && default >= min_sample_rate {
+            //         format.samples_rate = default;
+            //     }
+            // }
+            println!("config:[{:?}]", config);
 
             match config.sample_format() {
                 cpal::SampleFormat::F32 => run::<f32>(&device, &config.into()).unwrap(),
