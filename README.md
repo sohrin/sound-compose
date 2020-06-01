@@ -1,10 +1,16 @@
 # sound-compose
 super simplified DAW app like a docker-compose
 
-# 直近TODO
+# 直近TODO（サウンドプログラミング）
 0. GUI検討・開発（sound-compose.ymlの構成も）
 1. cpalで波形生成＆再生（wavはrodioではできた）
 2. SuperColliderかFoxDotかTidalCycles
+
+# 直近TODO（Qt）
+* QtデザイナでSplitterを配置
+http://mng.seedcollector.net/blog/?p=1459
+* レイアウトのお話
+http://vivi.dyndns.org/vivi/docs/Qt/layout.html
 
 # TODO for dev（SDL2）
 プロジェクト内にdllを含めたため準備不要（のはず）。
