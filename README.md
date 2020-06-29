@@ -1,6 +1,10 @@
 # sound-compose
 super simplified DAW app like a docker-compose
 
+# Rust記事
+* Rustのプロジェクトを始める前に知っておきたかったこと
+<https://qiita.com/maeda_/items/d765d514e7c72778f29f>
+
 # 直近TODO（サウンドプログラミング）
 0. GUI検討・開発（sound-compose.ymlの構成も）
 1. cpalで波形生成＆再生（wavはrodioではできた）
